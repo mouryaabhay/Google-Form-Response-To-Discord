@@ -5,7 +5,7 @@ var webhookUsername = "Forms Manager"; // Set webhook username
 // The post title will be in this format: Applicants_Name's Moderator Application
 // For Example: Clyde's Demo Form
 var postTitle = "'s Demo Form"; // Set post title
-var embedColor = "#27272F"; // Set embed color to whatever color you want or kepp it as it is.
+var embedColor = "#27272F"; // Set embed color to whatever color you want or keep it as it is.
 
 // Optional fields are pre-filled with dummy data, but you can leave them blank by simply deleting the text within quotation marks (""). This will ensure they don't appear in the final Discord embed.
 var messageContent = "Demo Content"; // Set embed content [Optional]
