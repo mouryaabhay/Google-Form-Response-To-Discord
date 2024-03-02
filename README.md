@@ -6,7 +6,7 @@
 - **Tip:** It's recommended to ask for the user's Discord username as the second question.
 
 ## 2. Open the Script Editor
-- CLick " **⋮** " (aka Meatballs Menu).
+- Click " **⋮** " (aka Meatballs Menu).
 - Select "Script editor".
 <a href="#" target="_blank" rel="noopener">
       <img alt="Script editior" align="center" src="https://github.com/mouryaabhay/Google_Form_Response_To_Discord/assets/158826825/cf5752f9-25af-4915-89c2-5195b99e5326">
@@ -23,8 +23,8 @@
 - **NOTE**: Only text between double quotes (**""**) must be changed!
   - Change webhookUsername value if you want.
   - Set postTitle
-  - Change embedColor value to whatever color you want or kepp it as it is.
-  - You can change the values of "Optioanl" field or kepp it as it is (This is optional).
+  - Change embedColor value to whatever color you want or keep it as it is.
+  - You can change the values of "Optional" field or keep it as it is (This is optional).
 
 ## 6. Test your code
 - Save your file and then press the "**▷ Run**" button to test your code.
