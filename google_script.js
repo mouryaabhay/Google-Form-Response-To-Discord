@@ -2,19 +2,18 @@
 var WEBHOOK_URL = "webhook_url?wait=true"; // Insert webhook url here
 var webhookUsername = "Forms Manager"; // Set webhook username
 
-
-// NOTE: You can leave optional field blank.
-
 // The post title will be in this format: Applicants_Name's Moderator Application
 // For Example: Clyde's Demo Form
-var postTitle = "'s Demo Form"; // Set embed title
+var postTitle = "'s Demo Form"; // Set post title
+var embedColor = "#27272F"; // Set embed color to whatever color you want or kepp it as it is.
+
+// Optional fields are pre-filled with dummy data, but you can leave them blank by simply deleting the text within quotation marks (""). This will ensure they don't appear in the final Discord embed.
 var messageContent = "Demo Content"; // Set embed content [Optional]
-var embedColor = "#27272F"; // Set embed color
 var authorName = "@clyde"; // Set embed author name [Optional]
 var authorNameURL = "https://discord.com/invite/E4KRWJW49B"; // Set a hyperlink to be attached to the name [Optional]
 var authorIconURL = "https://cdn.discordapp.com/avatars/1081004946872352958/a_6170487d32fdfe9f988720ad80e6ab8c.png?size=160"; // Set embed author icon [Optional]
 var embedTitle = "Demo Embed Title"; // Set embed title [Optional]
-var embedTitleURL = "https://dynasticcreator.carrd.co/";
+var embedTitleURL = "https://dynasticcreator.carrd.co/"; // Set embed title URL [Optional]
 var embedDescription = "Demo Embed Description"; // Set embed description [Optional]
 var thumbnailURL = "https://cdn.discordapp.com/avatars/1081004946872352958/a_6170487d32fdfe9f988720ad80e6ab8c.png?size=160"; // Set embed thumbnail [Optional]
 var imageURL = "https://cdn.discordapp.com/avatars/1081004946872352958/a_6170487d32fdfe9f988720ad80e6ab8c.png?size=160"; // Set embed image [Optional]
@@ -24,7 +23,7 @@ var footerIconURL = "https://cdn.discordapp.com/avatars/1081004946872352958/a_61
 
 
 
-// WARNING: DO NOT ALTER CODE BELOW THIS!!
+// WARNING: DO NOT ALTER CODE BELOW THIS UNLESS YOU KNOW WHAT YOU ARE DOING!!
 var name = "";
 var thread_id = "";
 
@@ -50,8 +49,10 @@ function onSubmit(e) {
             var parts = answer;
         }
         
-        name = response[1].getResponse().toString(); // From where the value has to be taken, the value of a the previous position has to be entered from the targetted position i.e if we need value of 2nd question use 1.
-        
+        // In this script the user's name is used in post name and to get the name, the value of a the previous question position has to be entered from the targetted question position.
+        // i.e If we ask for user's name in 2nd question enter 1 where it says response[1], just chnage the number. Basically, "Position of the question - 1".
+        name = response[1].getResponse().toString();
+
         // If the answer text is blank, skip this iteration.
         if (answer == "") {
             continue;
