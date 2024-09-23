@@ -1,3 +1,7 @@
+New Update: Comming Soon!
+
+---
+
 <h1 align = "center">Google Form Response To Discord Channel</h1>
 <h3 align = "center">This guide will show you how to automatically send responses from your Google Form to a specific Discord channel. It's a simple process that requires some initial setup.</h3>
 <br>
