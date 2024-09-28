@@ -2,7 +2,7 @@
 <h1></h1>
 <h1 align="center">Google Form Responses to Discord</h1>
 <h3 align="center">
-    This guide will take you through the easy steps to automatically send Google Form responses to a designated Discord forum channel. While the setup is simple, it requires some initial configuration. Let’s get started!
+    This guide will walk you through the steps to automatically send responses from your Google Form to a designated Discord channel. Whether you're gathering feedback, organizing events, or collecting data, integrating Google Forms with Discord can streamline your workflow.
 </h3>
 
 <!-- Why Use This Script -->
