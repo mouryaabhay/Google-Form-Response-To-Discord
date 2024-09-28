@@ -36,7 +36,7 @@
     </li><br>
     <li>  <!-- Step 2 -->
         <strong>Open the Script Editor</strong>
-        <p>Click the "<strong>⋮</strong>" (Meatballs Menu) and select "Script editor."</p>
+        <p>Click the ' <strong>⋮</strong> ' (Meatballs Menu) and select "Script editor".</p>
     </li><br>
     <li>  <!-- Step 3 -->
         <strong>Creating Files & Pasting the Google Script</strong>
@@ -53,7 +53,7 @@
                 <strong>Creating a New Script: Config.gs</strong>
                 <ol>
                     <li>Navigate to the <a href = "Google_Apps_Script_V2\Config.gs">Config.gs</a> file in this repo and copy the code within it.</li>
-                    <li>In the Google Apps Script editor, click the "<strong>+</strong>" icon in the "<strong>Files</strong>" section. Then, select 'Script' to create a new file and name it "Config.gs".</li>
+                    <li>In the Google Apps Script editor, click the ' <strong>+</strong> ' icon in the "<strong>Files</strong>" section. Then, select 'Script' to create a new file and name it "Config.gs".</li>
                     <li>Navigate to "Config.gs", delete the existing code, and paste in the new code you copied earlier.</li>
                 </ol>
             </li>
