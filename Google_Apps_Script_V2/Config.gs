@@ -19,8 +19,7 @@
 /* ---------- Configuarations --------- */
 
 // Webhook URL for sending messages to a Discord forum channel
-// const WEBHOOK_URL = "YOUR_WEBHOOK_URL?wait=true";
-const WEBHOOK_URL = "https://discord.com/api/webhooks/1163456626196488353/lpE_3BlTrtXiaHDDIFe_vbcRbehJasRcTSsD-ZgWDY3U_d5Bfta8WiFwsL8xMu6VCpmO?wait=true";
+const WEBHOOK_URL = "YOUR_WEBHOOK_URL?wait=true";
 
 // Question number in the Google Form where applicants provide their Discord username
 const usernameQuestion = 2;
