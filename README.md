@@ -46,7 +46,8 @@
                 <ol>
                     <li>Navigate to the <a href = "Google_Apps_Script_V2\Code.gs">Code.gs</a> file in this repo and copy the code within it.</li>
                     <li>When you open the Google Apps Script editor, within the Files section of left, you'll find a file named "Code.gs" by default.</li>
-                    <li>Navigate to "Code.gs", delete the existing code, and paste in the new code you copied earlier.</li>
+                    <li>Navigate to "Code.gs", delete the existing code, paste in the new code you copied earlier and save it.</li>
+                    <li>On the right of "<strong>Debug</strong>" button, select "<strong>onSubmit</strong>".</li>
                 </ol>
             </li>
             <li>  <!-- Step 3.2 -->
@@ -54,7 +55,7 @@
                 <ol>
                     <li>Navigate to the <a href = "Google_Apps_Script_V2\Config.gs">Config.gs</a> file in this repo and copy the code within it.</li>
                     <li>In the Google Apps Script editor, click the ' <strong>+</strong> ' icon in the "<strong>Files</strong>" section. Then, select 'Script' to create a new file and name it "Config.gs".</li>
-                    <li>Navigate to "Config.gs", delete the existing code, and paste in the new code you copied earlier.</li>
+                    <li>Navigate to "Config.gs", delete the existing code, paste in the new code you copied earlier and save it.</li>
                 </ol>
             </li>
         </ol>
