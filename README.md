@@ -77,12 +77,13 @@
                 <ul type = "disc">
                     <li>'YOUR_WEBHOOK_URL' must be updated.</li>
                     <li>Please keep the 'usernameQuestion' value unchanged. I recommend placing the username question second, as its current value is 2. If you move it to the first position, you'll need to change the value to 1.</li>
-                    <li>Update the 'embedColor' value to your preferred color using a hex color code, or you can leave it as the default.</li>
                     <li>
                         You can change the 'discordThreadNameSuffix' to whatever you’d like for the thread name.
                         <br>&nbsp;&nbsp;&nbsp;&nbsp;• Example thread name based on the default value:
                         <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@dynasticcreator Submitted a Form!
                     </li>
+                    <li>Customize the 'messageContent' to fit your needs! I have mentioned a few ideas below, including mentioning the staff role for notifications when a form is submitted, or you can get creative and think outside the box!</li>
+                    <li>Update the 'embedColor' value to your preferred color using a hex color code, or you can leave it as the default.</li>
                 </ul>
             </li>
         </ol>
@@ -110,18 +111,31 @@
 
 <h1></h1>
 <h3>📝 Additional Tips & Resources for Organizing Forum Responses:</h3>
-<p>Effectively managing submissions in Discord’s forum channel can significantly improve your workflow. By utilizing the tag feature, you can easily categorize and track responses. Below is a list of recommended tags along with their purposes:</p>
-<ul>
-    <li><strong>Pending Review:</strong> For submissions awaiting evaluation.</li>
-    <li><strong>Under Review:</strong> For applications currently being evaluated.</li>
-    <li><strong>Needs More Info:</strong> For applications or requests that require additional information.</li>
-    <li><strong>Suspicious:</strong> To flag submissions that require further investigation.</li>
-    <li><strong>Scheduled Interview:</strong> For submissions that have progressed to the interview stage.</li>
-    <li><strong>Rejected:</strong> For submissions that do not meet the necessary criteria.</li>
-    <li><strong>Approved:</strong> For submissions that have been successfully accepted.</li>
-    <li><strong>Archived:</strong> For completed applications that can be stored for future reference.</li>
-</ul>
-<p>By implementing these tags, you can ensure a smoother review process and enhance communication among team members. Feel free to adjust these categories as needed to best suit your specific requirements!</p>
+
+<ol type="I">
+    <li>
+        <strong>Organizing Form Submissions with Tags</strong>
+        <p>Effectively managing submissions in Discord’s forum channel can significantly improve your workflow. By utilizing the tag feature, you can easily categorize and track responses. Below is a list of recommended tags along with their purposes:</p>
+        <ul>
+            <li><strong>Pending Review:</strong> For submissions awaiting evaluation.</li>
+            <li><strong>Under Review:</strong> For applications currently being evaluated.</li>
+            <li><strong>Needs More Info:</strong> For applications or requests that require additional information.</li>
+            <li><strong>Suspicious:</strong> To flag submissions that require further investigation.</li>
+            <li><strong>Scheduled Interview:</strong> For submissions that have progressed to the interview stage.</li>
+            <li><strong>Rejected:</strong> For submissions that do not meet the necessary criteria.</li>
+            <li><strong>Approved:</strong> For submissions that have been successfully accepted.</li>
+            <li><strong>Archived:</strong> For completed applications that can be stored for future reference.</li>
+        </ul>
+        <p>By implementing these tags, you can ensure a smoother review process and enhance communication among team members. Feel free to adjust these categories as needed to best suit your specific requirements!</p>
+    </li>
+    <li>
+        <strong>'messageContent' Ideas</strong>
+        <ul>
+            <li>Notify all staff members by mentioning their role whenever a form is submitted.</li>
+            <li>To creatively conceal links or roles while maintaining a clean message, consider using the following text for a more subtle approach. I’ve demonstrated its use in 'Config.gs' for reference. Please use it responsibly!<br><pre><code>[Text to show] ||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​|| _ _ _ _ _ _ [Text to hide]</code></pre></li>
+        </ul>
+    </li>
+</ol>
 
 <h1></h1>
 

@@ -83,6 +83,7 @@ function createEmbedFields(questions, responses) {
 function sendEmbedToDiscord(embedItems) {
     const formTitle = FormApp.getActiveForm().getTitle(); // Get form title
     const embedPayload = {
+        "content": messageContent,
         "embeds": [{
             "color": parseInt(embedColor.replace(/^#/, ''), 16), // Set embed color
             "description": truncate(`### ${formTitle}`, DISCORD_LIMITS.DESCRIPTION), // Set form description
