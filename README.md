@@ -78,10 +78,13 @@
                     <li>'YOUR_WEBHOOK_URL' must be updated.</li>
                     <li>Please keep the 'usernameQuestion' value unchanged. I recommend placing the username question second, as its current value is 2. If you move it to the first position, you'll need to change the value to 1.</li>
                     <li>
-                        You can change the 'discordThreadNameSuffix' to whatever you’d like for the thread name.
+                        You can change the 'discordThreadNamePart' to whatever you’d like for the thread name.
                         <br>&nbsp;&nbsp;&nbsp;&nbsp;• Example thread name based on the default value:
                         <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@dynasticcreator Submitted a Form!
                     </li>
+                    <li>The 'threadNamePosition' value determines the placement of 'discordThreadNamePart', either at the beginning or end.</li>
+                    <li>Modify the 'noAnswerMessage' to customize the response for unanswered questions.</li>
+                    <li>To omit empty responses, set the 'skipEmptyResponses' value to true.</li>
                     <li>Customize the 'messageContent' to fit your needs! I have mentioned a few ideas below, including mentioning the staff role for notifications when a form is submitted, or you can get creative and think outside the box!</li>
                     <li>Update the 'embedColor' value to your preferred color using a hex color code, or you can leave it as the default.</li>
                 </ul>

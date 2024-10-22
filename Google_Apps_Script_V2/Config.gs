@@ -25,10 +25,19 @@ const WEBHOOK_URL = "YOUR_WEBHOOK_URL?wait=true";
 const usernameQuestion = 2;
 
 // Part of the thread name
-const discordThreadNameSuffix = " Submitted a Form!";
+const discordThreadNamePart = " Submitted a Moderator Application!";
+
+// Set to start for prefix, end for suffix
+const threadNamePosition = "start";
+
+// Set to true to skip empty answers, false to include them
+const skipEmptyResponses = true;
 
 // Message content which will be outside of embed
 const messageContent = "Love this project? Help us grow by sharing this project with your friends! ||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​|| _ _ _ _ _ _ https://discord.com/invite/ekRDrTEES5 https://discord.com/invite/E4KRWJW49B ";
 
 // Color hexcode for the embed message
 const embedColor = "#5865f2";
+
+// A default message for questions that have no response
+const noAnswerMessage = "No answer provided!"
