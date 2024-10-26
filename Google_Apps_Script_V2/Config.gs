@@ -21,6 +21,12 @@
 // Webhook URL for sending messages to a Discord forum channel
 const WEBHOOK_URL = "YOUR_WEBHOOK_URL?wait=true";
 
+// List of Tag IDs to apply when a post is made.
+const DISCORD_FORUM_TAGS = [
+    "TAG_ID_1",
+    "TAG_ID_2"
+];
+
 // Question number in the Google Form where applicants provide their Discord username
 const usernameQuestion = 2;
 

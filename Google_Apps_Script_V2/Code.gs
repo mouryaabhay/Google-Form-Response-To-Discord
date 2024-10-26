@@ -97,7 +97,8 @@ function sendEmbedToDiscord(embedItems) {
             "color": parseInt(embedColor.replace(/^#/, ''), 16), // Set embed color
             "description": truncate(`### ${formTitle}`, DISCORD_LIMITS.DESCRIPTION), // Set form description
             "fields": embedItems // Include embed items
-        }]
+        }],
+        "applied_tags": DISCORD_FORUM_TAGS // List of Forum Tag IDs to apply to the post
     };
 
     // Add thread name if no thread ID exists
@@ -105,7 +106,6 @@ function sendEmbedToDiscord(embedItems) {
         embedPayload.thread_name = discordThreadName;
     }
 
-    
     const response = sendToDiscord(embedPayload); // Send payload to Discord
     discordThreadId = JSON.parse(response).channel_id; // Store the returned thread ID from response
     console.log(`Thread ID: ${discordThreadId}`); // Log thread ID
