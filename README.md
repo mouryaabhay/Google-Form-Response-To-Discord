@@ -7,15 +7,15 @@
 
 <!-- Why Use This Script -->
 <h1></h1>
-<h3>🤔 Why Use This Script? What Improvements Are Made?</h3>
+<h3>🌟 Key Features</h3>
 <ul>
-    <li>Offers faster execution than previous versions.</li>
-    <li>Doesn’t stop the execution of script if it encounters a long passage that exceeds Discord's embed limits.</li>
-    <li>Automatically truncates questions and responses that go over Discord's embed limits.</li>
-    <li>Sends separate embed messages for each section of the Google Form, allowing for more content in one embed.</li>
-    <li>Improved presentation of questions and responses.</li>
-    <li>If a user enters multiple passages in their response, the script presents them as bullet points.</li>
-    <li>Handles various response types from Google Forms.</li>
+    <li>Fast execution and reliable performance</li>
+    <li>Handles long responses without breaking</li>
+    <li>Auto-truncates content to meet Discord limits</li>
+    <li>Organizes responses into multiple embeds by form sections</li>
+    <li>Formats multiple-line responses as bullet points</li>
+    <li>Supports all Google Form response types</li>
+    <li>Customizable thread naming and tagging</li>
 </ul>
 
 <!-- Prerequisites -->
@@ -28,124 +28,197 @@
 
 <!-- Steps-by-Step Instructions -->
 <h1></h1>
-<h3>📝 <u>Steps to Set Up the Google Script</u></h3><br>
+<h3>🚀 Setup Instructions</h3><br>
 <ol>
-    <li>  <!-- Step 1 -->
-        <strong>Create a Google Form</strong>
-        <p>Create a google form by visiting https://form.new/</p>
-    </li><br>
-    <li>  <!-- Step 2 -->
+    <!-- Step 1 -->
+    <li>
+        <strong>Form Creation</strong>
+        <ol>
+            <li>Visit https://form.new/ to create your Google Form</li>
+            <li>Include a Discord username field (recommended as question #2)</li>
+        </ol>
+    </li>
+    <br>
+    <!-- Step 2 -->
+    <li>
         <strong>Open the Script Editor</strong>
-        <p>Click the ' <strong>⋮</strong> ' (Meatballs Menu) and select "Script editor".</p>
-    </li><br>
-    <li>  <!-- Step 3 -->
+        <p>Click the <code> ⋮ </code> (Meatballs Menu) and select <code>Script editor</code>.</p>
+    </li>
+    <br>
+    <!-- Step 3 -->
+    <li>
         <strong>Creating Files & Pasting the Google Script</strong>
         <ol>
-            <li>  <!-- Step 3.1 -->
+            <!-- Step 3.1 -->
+            <li>
                 <strong>Opening Existing Script: Code.gs</strong>
                 <ol>
-                    <li>Navigate to the <a href = "Google_Apps_Script_V2\Code.gs">Code.gs</a> file in this repo and copy the code within it.</li>
-                    <li>When you open the Google Apps Script editor, within the Files section of left, you'll find a file named "Code.gs" by default.</li>
-                    <li>Navigate to "Code.gs", delete the existing code, paste in the new code you copied earlier and save it.</li>
-                    <li>On the right of "<strong>Debug</strong>" button, select "<strong>onSubmit</strong>".</li>
+                    <li>Navigate to the <a href = "Google_Apps_Script_V2\Code.gs">Code.gs</a> file in this repo and copy the code within it</li>
+                    <li>When you open the Google Apps Script editor, within the Files section on left, you'll find a file named "Code.gs" by default</li>
+                    <li>Navigate to "Code.gs", delete the existing code, paste in the new code you copied earlier and save it</li>
+                    <li>On the right of <code>Debug</code> button, select <code>onSubmit</code></li>
                 </ol>
             </li>
-            <li>  <!-- Step 3.2 -->
+            <!-- Step 3.2 -->
+            <li>
                 <strong>Creating a New Script: Config.gs</strong>
                 <ol>
-                    <li>Navigate to the <a href = "Google_Apps_Script_V2\Config.gs">Config.gs</a> file in this repo and copy the code within it.</li>
-                    <li>In the Google Apps Script editor, click the ' <strong>+</strong> ' icon in the "<strong>Files</strong>" section. Then, select 'Script' to create a new file and name it "Config.gs".</li>
-                    <li>Navigate to "Config.gs", delete the existing code, paste in the new code you copied earlier and save it.</li>
+                    <li>Navigate to the <a href = "Google_Apps_Script_V2\Config.gs">Config.gs</a> file in this repo and copy the code within it</li>
+                    <li>In the Google Apps Script editor, click the <code> + </code> icon in the "<strong>Files</strong>" section. Then, select <code>Script</code> to create a new file and name it "Config.gs"</li>
+                    <li>Navigate to "Config.gs", delete the existing code, paste in the new code you copied earlier and save it</li>
                 </ol>
             </li>
         </ol>
-    </li><br>
-    <li>  <!-- Step 4 -->
+    </li>
+    <br>
+    <!-- Step 4 -->
+    <li>
         <strong>Create a Discord Webhook</strong>
         <ol>
-            <li>Navigate to the Discord forum channel where you want the form submission responses to appear.</li>
-            <li>Click on Edit Channel (gear icon) and Go to Integrations > Webhooks.</li>
-            <li>Create a new webhook and edit the webhook’s name and icon as desired.</li>
-            <li>Copy the webhook link for later use.</li>
+            <li>Navigate to the Discord forum channel where you want the form submission responses to appear</li>
+            <li>Click on Edit Channel (gear icon) and Go to <code>Integrations > Webhooks</code></li>
+            <li>Create a new webhook and edit the webhook’s name and icon as desired</li>
+            <li>Copy the webhook link for later use</li>
         </ol>
-    </li><br>
-    <li>  <!-- Step 5 -->
+    </li>
+    <br>
+    <!-- Step 5 -->
+    <li>
         <strong>Update the variable values in "Config.gs"</strong>
         <ol>
-            <li>Replace the text 'YOUR_WEBHOOK_URL' with the webhook URL copied earlier.</li>
-            <li>List of variables available configurable:
-                <ul type = "disc">
-                    <li>'YOUR_WEBHOOK_URL' must be updated.</li>
-                    <li>Please keep the 'usernameQuestion' value unchanged. I recommend placing the username question second, as its current value is 2. If you move it to the first position, you'll need to change the value to 1.</li>
-                    <li>
-                        You can change the 'discordThreadNamePart' to whatever you’d like for the thread name.
-                        <br>&nbsp;&nbsp;&nbsp;&nbsp;• Example thread name based on the default value:
-                        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@dynasticcreator Submitted a Form!
+            <li>Replace <code>YOUR_WEBHOOK_URL</code> with your copied Discord webhook URL</li>
+            <li>Configure the following variables as needed:
+                <ul type="disc">
+                    <li><strong>DISCORD_WEBHOOK_URL</strong>
+                        <br>• <code>YOUR_WEBHOOK_URL</code> must be replaced with webhook url
                     </li>
-                    <li>The 'threadNamePosition' value determines the placement of 'discordThreadNamePart', either at the beginning or end.</li>
-                    <li>Modify the 'noAnswerMessage' to customize the response for unanswered questions.</li>
-                    <li>To omit empty responses, set the 'skipEmptyResponses' value to true.</li>
-                    <li>Customize the 'messageContent' to fit your needs! I have mentioned a few ideas below, including mentioning the staff role for notifications when a form is submitted, or you can get creative and think outside the box!</li>
-                    <li>Update the 'embedColor' value to your preferred color using a hex color code, or you can leave it as the default.</li>
+                    <li><strong>DISCORD_FORUM_TAGS</strong>
+                        <br>• Add forum tag IDs if you want tags on forum posts
+                        <br>• Tag ID must be within double quotes
+                        <br>• Format: <code>[ "1111111111111111111", "2222222222222222222" ]</code>
+                        <br>• Leave empty <code>[]</code> if not using tags
+                    </li>
+                    <li><strong>usernameQuestion</strong>
+                        <br>• Keep as 2 (default) if username question is second
+                        <br>• Or change to match the position number of your username question (e.g., if it's the 5th question, change to 5)
+                    </li>
+                    <li><strong>discordThreadNamePart</strong>
+                        <br>• Customize the thread name text
+                        <br>• Example: "Submitted a Form"
+                    </li>
+                    <li><strong>threadNamePosition</strong>
+                        <br>• Determines where discordThreadNamePart appears in the thread name
+                        <br>• Set to <code>start</code> or <code>end</code>
+                        <br>• Examples (assuming discordThreadNamePart value is "Submitted a Form"):
+                        <br>&nbsp;&nbsp;- If <code>start</code>: "Submitted a Form @username"
+                        <br>&nbsp;&nbsp;- If <code>end</code>: "@username Submitted a Form"
+                    </li>
+                    <li><strong>discordMessageContent</strong>
+                        <br>• Customize message that appear outside of embed
+                        <br>• Can include role mentions or other text
+                        <br>• Below some ideas are mentioned under "Best Practices"
+                    </li>
+                    <li><strong>noAnswerMessage</strong>
+                        <br>• Custom message for unanswered questions
+                    </li>
+                    <li><strong>skipEmptyResponses</strong>
+                        <br>• Set to true to hide empty responses
+                        <br>• Set to false to show all responses
+                    </li>
+                    <li><strong>discordEmbedColor</strong>
+                        <br>• Set embed color using hex color code (e.g., "#5865f2") or leave default value if preferred
+                    </li>
                 </ul>
             </li>
         </ol>
-    </li><br>
-    <li>  <!-- Step 6 -->
-        <strong>Add a Trigger</strong>
-        <ul>
-            <li>Navigate to the "Triggers" page by clicking the "Triggers" option (alarm clock icon) on the left side of the screen.</li>
+    </li>
+    <br>
+    <!-- Step 6 -->
+    <li>
+        <strong>Trigger Setup</strong>
+        <ol>
+            <li>Navigate to the "Triggers" page by clicking the <code>Triggers</code> option (alarm clock icon) on the left side of the screen</li>
             <li>
-                Click the "Add Trigger" button in the bottom right corner of the screen. Update the settings as shown in the image below, and then save your changes.<br>
+                Click the <code>Add Trigger</code> button in the bottom right corner of the screen. Update the settings as shown in the image below, and then save your changes.<br>
                 <a rel="noopener">
                     <img alt="Trigger Configuration" align="center" src="https://github.com/mouryaabhay/Google_Form_Response_To_Discord/assets/158826825/3a9ec28e-8878-48fa-9282-d466e8d54529">
                 </a>
-            </li><br>
-        </ul>
-    </li><br>
-    <li>  <!-- Step 7 -->
-        <strong>Testing the Setup Operation</strong>
-        <ol>
-            <li>Save your script, then click the "<strong>▷ Run</strong>" button to test it.</li>
-            <li>Make sure your form has at least one response, as the test retrieves the latest submitted response.</li>
+            </li>
+            <br>
         </ol>
-    </li><br>
+    </li>
+    <br>
+    <!-- Step 7 -->
+    <li>
+        <strong>Testing the Integration</strong>
+        <ol>
+            <li>Click the <code>▷ Run</code> button to test the setup</li>
+            <li>Note: You'll need at least one form submission to test properly, as the script uses the most recent response</li>
+        </ol>
+    </li>
 </ol>
+<br>
 
 <h1></h1>
-<h3>📝 Additional Tips & Resources for Organizing Forum Responses:</h3>
+<h3>📋 Best Practices</h3>
 
 <ol type="I">
     <li>
-        <strong>Organizing Form Submissions with Tags</strong>
-        <p>Effectively managing submissions in Discord’s forum channel can significantly improve your workflow. By utilizing the tag feature, you can easily categorize and track responses. Below is a list of recommended tags along with their purposes:</p>
+        <strong>Form Submissions Organization</strong>
+        <p>Use tags to easily categorize and track form status:</p>
         <ul>
-            <li><strong>Pending Review:</strong> For submissions awaiting evaluation.</li>
-            <li><strong>Under Review:</strong> For applications currently being evaluated.</li>
-            <li><strong>Needs More Info:</strong> For applications or requests that require additional information.</li>
-            <li><strong>Suspicious:</strong> To flag submissions that require further investigation.</li>
-            <li><strong>Scheduled Interview:</strong> For submissions that have progressed to the interview stage.</li>
-            <li><strong>Rejected:</strong> For submissions that do not meet the necessary criteria.</li>
-            <li><strong>Approved:</strong> For submissions that have been successfully accepted.</li>
-            <li><strong>Archived:</strong> For completed applications that can be stored for future reference.</li>
+            <li><strong>🔍 Pending Review:</strong> For submissions awaiting evaluation</li>
+            <li><strong>👀 Under Review:</strong> For applications currently being evaluated</li>
+            <li><strong>❓ Needs More Info:</strong> For applications or requests that require additional information</li>
+            <li><strong>⚠️ Suspicious:</strong> To flag submissions that require further investigation</li>
+            <li><strong>📅 Scheduled Interview:</strong> For submissions that have progressed to the interview stage</li>
+            <li><strong>❌ Rejected:</strong> For submissions that do not meet the necessary criteria</li>
+            <li><strong>✅ Approved:</strong> For submissions that have been successfully accepted</li>
+            <li><strong>📁 Archived:</strong> For completed applications that can be stored for future reference</li>
         </ul>
-        <p>By implementing these tags, you can ensure a smoother review process and enhance communication among team members. Feel free to adjust these categories as needed to best suit your specific requirements!</p>
     </li>
     <li>
-        <strong>'messageContent' Ideas</strong>
+        <strong>Message Customization Tips</strong>
         <ul>
-            <li>Notify all staff members by mentioning their role whenever a form is submitted.</li>
-            <li>To creatively conceal links or roles while maintaining a clean message, consider using the following text for a more subtle approach. I’ve demonstrated its use in 'Config.gs' for reference. Please use it responsibly!<br><pre><code>[Text to show] ||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​|| _ _ _ _ _ _ [Text to hide]</code></pre></li>
+            <li><strong>Staff Notification</strong>
+                <br>• Use <code><@&ROLE_ID></code> to mention staff roles
+                <br>• Example: <code>Hey <@&1234567890123456789>, new submission!</code>
+            </li>
+            <li>Hidden Text format:
+                <br>• I’ve demonstrated its use in 'Config.gs' for reference.
+                <br>• Please use it responsibly!
+                <br><pre><code>[Text to show] ||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​|| _ _ _ _ _ _ [Text to hide]</code></pre>
+            </li>
         </ul>
+    </li>
+</ol>
+
+<h1></h1>
+<h3>🔍 Troubleshooting: Common Issues</h3>
+<ol>
+    <li>
+        <strong>Webhook not working</strong>
+        <br>• Webhook URL is valid and correctly copied (should start with <code>https://discord.com/api/webhooks/</code>)
+        <br>• Webhook hasn't been deleted or regenerated in Discord
+        <br>• The channel where webhook was created still exists
+        <p><strong>Fix:</strong> Try creating and using a new webhook if issues persist.</p>
+    </li>
+    <li>
+        <strong>Script errors</strong>
+        <br>• Ensure that on the right of <code>Debug</code> button, <code>onSubmit</code> is selected
+        <br>• Ensure all required variable values are properly configured
+        <br>• Check trigger configuration
     </li>
 </ol>
 
 <h1></h1>
 
 > [!IMPORTANT]
-> - Support:<br>
->        For support requests, code updates, improvement ideas, or reporting bugs, please reach out via Discord for a quicker response. You can also create an issue on GitHub if needed.
+> Need help? Join our Discord servers:
+> - Quack To Code: https://discord.com/invite/ekRDrTEES5
+> - Creation Guide: https://discord.com/invite/E4KRWJW49B
 >
-> - Join my server to ask questions or get help:<br>
->     - Quack To Code: https://discord.com/invite/ekRDrTEES5<br>
->     - Creation Guide: https://discord.com/invite/E4KRWJW49B
+> For technical issues:
+> - Create a GitHub issue
+> - Include error messages
+> - Provide steps to reproduce

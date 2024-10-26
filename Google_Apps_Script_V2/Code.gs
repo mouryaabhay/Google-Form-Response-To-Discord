@@ -67,7 +67,7 @@ function getFirstPageQuestions(activeForm) {
 // Create embed fields from questions and responses
 function createEmbedFields(questions, responses) {
     return questions.reduce((fields, question) => {
-        const response = responses.get(question.getTitle()) || noAnswerMessage; // Get esponse or default message
+        const response = responses.get(question.getTitle()) || noAnswerMessage; // Get response or default message
         const responseText = String(response);
 
         // Skip empty responses if the toggle is on
@@ -92,14 +92,18 @@ function createEmbedFields(questions, responses) {
 function sendEmbedToDiscord(embedItems) {
     const formTitle = FormApp.getActiveForm().getTitle(); // Get form title
     const embedPayload = {
-        "content": messageContent,
+        "content": discordMessageContent,
         "embeds": [{
-            "color": parseInt(embedColor.replace(/^#/, ''), 16), // Set embed color
+            "color": parseInt(discordEmbedColor.replace(/^#/, ''), 16), // Set embed color
             "description": truncate(`### ${formTitle}`, DISCORD_LIMITS.DESCRIPTION), // Set form description
             "fields": embedItems // Include embed items
-        }],
-        "applied_tags": DISCORD_FORUM_TAGS // List of Forum Tag IDs to apply to the post
+        }]
     };
+
+    // Only add applied_tags if DISCORD_FORUM_TAGS is defined and not empty
+    if (typeof DISCORD_FORUM_TAGS !== 'undefined' && DISCORD_FORUM_TAGS.length > 0) {
+        embedPayload.applied_tags = DISCORD_FORUM_TAGS;
+    }
 
     // Add thread name if no thread ID exists
     if (!discordThreadId) {
@@ -122,7 +126,7 @@ function sendToDiscord(payload) {
     };
 
     // Construct URL with thread ID if available
-    const url = `${WEBHOOK_URL}${discordThreadId ? `&thread_id=${ discordThreadId}` : ''}`; // Add thread parameter if available
+    const url = `${DISCORD_WEBHOOK_URL}${discordThreadId ? `&thread_id=${ discordThreadId}` : ''}`; // Add thread parameter if available
     
     try {
         // Send request to Discord and return the response
@@ -171,7 +175,7 @@ function sendSectionMessageToDiscord(sectionTitle, questionItems, responses) {
 
     const embedPayload = {
         "embeds": [{
-            "color": parseInt(embedColor.replace(/^#/, ''), 16), // Set embed color
+            "color": parseInt(discordEmbedColor.replace(/^#/, ''), 16), // Set embed color
             "title": sectionTitle, // Set section title
             "fields": embedFields // Include fields
         }]
