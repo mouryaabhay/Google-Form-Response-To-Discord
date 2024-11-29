@@ -36,6 +36,7 @@
         <ol>
             <li>Visit https://form.new/ to create your Google Form</li>
             <li>Include a Discord username field (recommended as question #2)</li>
+            <li>Include a Discord user ID field (recommended as question #3)</li>
         </ol>
     </li>
     <br>
@@ -98,6 +99,10 @@
                         <br>• Format: <code>[ "1111111111111111111", "2222222222222222222" ]</code>
                         <br>• Leave empty <code>[]</code> if not using tags
                     </li>
+                    <li><strong>userIDQuestion</strong>
+                        <br>• Keep as 3 (default) if user ID question is third
+                        <br>• Or change to match the position number of your user ID question (e.g., if it's the 5th question, change to 5)
+                    </li>
                     <li><strong>usernameQuestion</strong>
                         <br>• Keep as 2 (default) if username question is second
                         <br>• Or change to match the position number of your username question (e.g., if it's the 5th question, change to 5)
@@ -109,14 +114,17 @@
                     <li><strong>threadNamePosition</strong>
                         <br>• Determines where discordThreadNamePart appears in the thread name
                         <br>• Set to <code>start</code> or <code>end</code>
+                        <br>• Set to <code>NULL</code> if you don't want it
                         <br>• Examples (assuming discordThreadNamePart value is "Submitted a Form"):
                         <br>&nbsp;&nbsp;- If <code>start</code>: "Submitted a Form @username"
                         <br>&nbsp;&nbsp;- If <code>end</code>: "@username Submitted a Form"
+                        <br>&nbsp;&nbsp;- If <code>NULL</code>: "Submitted a Form"
                     </li>
-                    <li><strong>discordMessageContent</strong>
+                    <li><strong>messageContent</strong>
                         <br>• Customize message that appear outside of embed
-                        <br>• Can include role mentions or other text
-                        <br>• Below some ideas are mentioned under "Best Practices"
+                        <br>• Available placeholders:
+                        <br>&nbsp;&nbsp;- <code>{discordUserID}</code>: Discord user ID of the applicant
+                        <br>• Refer to "Best Practices" for creative usage examples
                     </li>
                     <li><strong>noAnswerMessage</strong>
                         <br>• Custom message for unanswered questions

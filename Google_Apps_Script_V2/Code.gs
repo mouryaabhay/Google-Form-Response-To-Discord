@@ -39,16 +39,36 @@ function onSubmit(event) {
     const questions = getFirstPageQuestions(activeForm);
     const responses = new Map(latestResponse.getItemResponses().map(item => [item.getItem().getTitle(), item.getResponse()]));
 
-    // Extract username for thread naming
-    const username = responses.get(questions[usernameQuestion - 1]?.getTitle()) || "";
-    discordThreadName = truncate(
-        username 
-            ? (threadNamePosition === 'start'
-                ? `${username}${discordThreadNamePart}` 
-                : `${discordThreadNamePart}${username}`)
-            : discordThreadNamePart, 
-        DISCORD_LIMITS.THREAD_NAME
-    );
+    // Extract Discord User ID for message content
+    const discordUserID = responses.get(questions[userIDQuestion - 1]?.getTitle()) || "";
+    console.log(`Discord User ID: ${discordUserID}`);
+
+    // Function to create the message content
+    discordMessageContent = updateDiscordMessageContentVariable(discordUserID);
+
+    // Extract Discord Username for thread naming
+    const discordUsername = responses.get(questions[usernameQuestion - 1]?.getTitle()) || "";
+    console.log(`Discord Username: ${discordUsername}`);
+
+    // Set thread name based on threadNamePosition
+    if (threadNamePosition === null) {
+        discordThreadName = ""; // Set to an empty string or a default value
+    } else if (threadNamePosition === 'start') {
+        discordThreadName = truncate(
+            `${discordUsername}${discordThreadNamePart}`, 
+            DISCORD_LIMITS.THREAD_NAME
+        );
+    } else if (threadNamePosition === 'end') {
+        discordThreadName = truncate(
+            `${discordThreadNamePart}${discordUsername}`, 
+            DISCORD_LIMITS.THREAD_NAME
+        );
+    } else {
+        discordThreadName = truncate(
+            discordThreadNamePart, 
+            DISCORD_LIMITS.THREAD_NAME
+        );
+    }
 
     // Create embed fields and send to Discord
     const embedFields = createEmbedFields(questions, responses);
@@ -56,6 +76,11 @@ function onSubmit(event) {
     
     // Process sections and send additional Discord messages
     processSectionsAndSendDiscordMessages(activeForm, responses);
+}
+
+// Function to create the Discord message content
+function updateDiscordMessageContentVariable(discordUserID) {
+    return messageContent.replace('{discordUserID}', discordUserID);
 }
 
 // Get questions from the first page of the form
@@ -138,24 +163,25 @@ function sendToDiscord(payload) {
 }
 
 // Process sections and send additional Discord messages
-function processSectionsAndSendDiscordMessages(activeForm, responses) {
+function processSectionsAndSendDiscordMessages(activeForm, responses, formTitle) {
     const allItems = activeForm.getItems();
     let currentSection = ""; // Initialize current section
     let questionsInSection = []; // Array to hold questions
 
-    // Iterate through all items in the form
-    allItems.forEach(item => {
+    // Iterate through all items in the form using a for loop
+    for (let i = 0; i < allItems.length; i++) {
+        const item = allItems[i];
         if (item.getType() === FormApp.ItemType.PAGE_BREAK) {
             // If a page break is found, send the current section and reset
             if (currentSection) {
                 sendSectionMessageToDiscord(currentSection, questionsInSection, responses);
             }
             currentSection = item.getTitle();
-            questionsInSection.length = 0;
+            questionsInSection.length = 0; // Reset questions for the new section
         } else {
             questionsInSection.push(item.getTitle()); // Add question to the current section
         }
-    });
+    }
 
     // Send the last section if any
     if (currentSection) {
