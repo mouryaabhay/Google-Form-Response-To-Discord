@@ -36,7 +36,7 @@ const usernameQuestion = 2;
 // Part of the thread name
 const discordThreadNamePart = " Submitted a Form";
 
-// Set to start for prefix, end for suffix
+// Set to start for prefix, end for suffix, NULL to remove
 const threadNamePosition = "start";
 
 // Message content to accompany the embed, mentioning the applicant
