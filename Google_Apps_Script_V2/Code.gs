@@ -44,7 +44,7 @@ function onSubmit(event) {
     console.log(`Discord User ID: ${discordUserID}`);
 
     // Function to create the message content
-    discordMessageContent = updateDiscordMessageContentVariable(discordUserID);
+    discordMessageContent = createDiscordMessageContent(discordUserID);
 
     // Extract Discord Username for thread naming
     const discordUsername = responses.get(questions[usernameQuestion - 1]?.getTitle()) || "";
@@ -79,7 +79,7 @@ function onSubmit(event) {
 }
 
 // Function to create the Discord message content
-function updateDiscordMessageContentVariable(discordUserID) {
+function createDiscordMessageContent(discordUserID) {
     return messageContent.replace('{discordUserID}', discordUserID);
 }
 
