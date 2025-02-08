@@ -11,7 +11,6 @@
         You can also create an issue on GitHub if needed.
 
     Join my server to ask questions or get help:
-        - Quack To Code: https://discord.com/invite/ekRDrTEES5
         - Creation Guide: https://discord.com/invite/E4KRWJW49B
 
 **************************************************/

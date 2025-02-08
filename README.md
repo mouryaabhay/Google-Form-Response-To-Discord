@@ -223,7 +223,6 @@
 
 > [!IMPORTANT]
 > Need help? Join our Discord servers:
-> - Quack To Code: https://discord.com/invite/ekRDrTEES5
 > - Creation Guide: https://discord.com/invite/E4KRWJW49B
 >
 > For technical issues:
