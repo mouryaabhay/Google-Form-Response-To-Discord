@@ -230,4 +230,4 @@
 > - Include error messages
 > - Provide steps to reproduce
 
-![Repo Views](https://hits.sh/github.com/mouryaabhay/Google-Form-Response-To-Discord.svg)
+[![Hits](https://hits.sh/github.com/mouryaabhay/Google-Form-Response-To-Discord.svg?label=Views)](https://hits.sh/github.com/mouryaabhay/Google-Form-Response-To-Discord/)
