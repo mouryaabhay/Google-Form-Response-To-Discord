@@ -221,6 +221,11 @@
 
 <h1></h1>
 
+> [!CAUTION]
+> ## ⚠️ Version 1 Deprecated
+> **V1 of this project is no longer supported or updated.**
+> Please use **V2** from this repository for all new setups.
+
 > [!IMPORTANT]
 > Need help? Join our Discord servers:
 > - Creation Guide: https://discord.com/invite/E4KRWJW49B
@@ -230,4 +235,4 @@
 > - Include error messages
 > - Provide steps to reproduce
 
-![Views](https://hits.sh/github.com/mouryaabhay/Google-Form-Response-To-Discord.svg?label=Views&extraCount=0)
+![Views](https://hits.sh/github.com/mouryaabhay/Google-Form-Response-To-Discord.svg?label=Total%20Views)
