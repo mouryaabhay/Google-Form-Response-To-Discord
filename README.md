@@ -230,4 +230,4 @@
 > - Include error messages
 > - Provide steps to reproduce
 
-![Visitors](https://komarev.com/ghpvc/?username=mouryaabhayE&color=blue&style=flat)
+https://hits.sh/github.com/mouryaabhay/Google-Form-Response-To-Discord.svg
