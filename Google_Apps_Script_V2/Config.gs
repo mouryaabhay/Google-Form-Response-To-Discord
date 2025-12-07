@@ -1,26 +1,14 @@
 /**************************************************
-
-    Google Form Response To Discord
-
-    Author: Mourya Abhay Amarjeet aka Dynastic Creator
-    Contact: @mouryaabhay / @dynasticcreator
-    
-    Support:
-        For support requests, code updates, improvement ideas, or reporting bugs, 
-        please reach out via Discord for a quicker response. 
-        You can also create an issue on GitHub if needed.
-
-    Join my server to ask questions or get help:
-        - Creation Guide: https://discord.com/invite/E4KRWJW49B
-
+  Google Form Response To Discord
+  Author: Mourya Abhay Amarjeet (@mouryaabhay) aka Dynastic Creator
 **************************************************/
 
 /* ---------- Configurations --------- */
 
-// Webhook URL for sending messages to a Discord forum channel (Do not delete "?wait=true")
+// Webhook URL for sending messages to a Discord forum channel (Do not delete or replace "?wait=true")
 const DISCORD_WEBHOOK_URL = "YOUR_WEBHOOK_URL?wait=true";
 
-// List of Tag IDs to apply when a post is created.
+// Tag IDs to apply when creating a forum post (leave empty array if not using forum tags)
 const DISCORD_FORUM_TAGS = [
     "TAG_ID_1",
     "TAG_ID_2"
@@ -48,6 +36,3 @@ const noAnswerMessage = "No answer provided!";
 
 // Set to true to skip empty answers, false to include them
 const skipEmptyResponses = false;
-
-// Color hex code for the embed message
-const discordEmbedColor = "#5865f2";

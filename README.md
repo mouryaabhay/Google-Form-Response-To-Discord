@@ -13,18 +13,18 @@
     <li>Handles long responses without breaking</li>
     <li>Auto-truncates content to meet Discord limits</li>
     <li>Organizes responses into multiple embeds by form sections</li>
-    <li>Formats multiple-line responses as bullet points</li>
     <li>Supports all Google Form response types</li>
-    <li>Customizable thread naming and tagging</li>
+    <li>Customizable thread naming and auto-tagging</li>
 </ul>
 
 <!-- Prerequisites -->
 <h1></h1>
 
 > [!NOTE]
-> - Ensure your form includes a question for the applicant's Discord username, ideally positioned as the second question, since it will be used for the thread title.
-> - Keep the question on a single line; using markdown in the embed field for multi-line text may not render properly on desktop or web clients. Multi-line questions won’t cause execution issues, but they can affect how the content appears.
-> - Use a Discord webhook specifically of forum channel, as this script is tailored with that channel type in mind.
+> - Make sure your form includes a Discord username field. Placing it as question #2 is recommended (you can change this index in `Config.gs`). This value is used to build thread titles in forum channels.
+> - For best display results, keep your question titles on a single line. While multi-line questions won’t break the script, Discord may display them unevenly inside embeds.
+> - The script works best with a forum-channel webhook, but normal channel webhooks are fully supported. It automatically detects the webhook type and switches behavior accordingly.
+> - All Google Form answer types are supported. However, grid-style questions (multiple rows/columns) cannot be visually formatted well in Discord embeds due to Discord’s limited markdowns.
 
 <!-- Steps-by-Step Instructions -->
 <h1></h1>
@@ -96,7 +96,7 @@
                     <li><strong>DISCORD_FORUM_TAGS</strong>
                         <br>• Add forum tag IDs if you want tags on forum posts
                         <br>• Tag ID must be within double quotes
-                        <br>• Format: <code>[ "1111111111111111111", "2222222222222222222" ]</code>
+                        <br>• Format: <code>[ "1163454653917302825", "1163459173917302825" ]</code>
                         <br>• Leave empty <code>[]</code> if not using tags
                     </li>
                     <li><strong>userIDQuestion</strong>
@@ -229,3 +229,5 @@
 > - Create a GitHub issue
 > - Include error messages
 > - Provide steps to reproduce
+
+![Visitors](https://komarev.com/ghpvc/?username=YOUR_GITHUB_USERNAME&color=blue&style=flat)
