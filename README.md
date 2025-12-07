@@ -222,8 +222,8 @@
 <h1></h1>
 
 > [!CAUTION]
-> ## ⚠️ Version 1 Deprecated
-> **V1 of this project is no longer supported or updated.**
+> Version 1 Deprecated
+> V1 of this project is no longer supported or updated.
 > Please use **V2** from this repository for all new setups.
 
 > [!IMPORTANT]
