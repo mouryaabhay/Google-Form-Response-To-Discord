@@ -222,7 +222,7 @@
 <h1></h1>
 
 > [!CAUTION]
-> Version 1 Deprecated
+> Version 1 Deprecated\n
 > V1 of this project is no longer supported or updated.
 > Please use **V2** from this repository for all new setups.
 
