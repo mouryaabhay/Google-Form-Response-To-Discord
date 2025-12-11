@@ -6,7 +6,7 @@
 
 let discordThreadId = "";
 let discordThreadName = "";
-let webhookSupportsForum = true;   // AUTO-DETECTED on first send
+let webhookSupportsForum = true;
 let forumDetectionDone = false;
 
 /* ---------- Discord Limits ---------- */
@@ -17,7 +17,7 @@ const DISCORD_LIMITS = {
   FIELD_VALUE: 1024
 };
 
-/* ---------- Colors (20 cyclic embed colors) ---------- */
+/* ---------- Colors ---------- */
 const EMBED_COLORS = [
   0x1abc9c, 0x2ecc71, 0x3498db, 0x9b59b6,
   0xe91e63, 0xe67e22, 0xf1c40f, 0xe74c3c,
@@ -27,34 +27,29 @@ const EMBED_COLORS = [
 ];
 
 let embedColorIndex = 0;
-function getNextEmbedColor() {
-  const color = EMBED_COLORS[embedColorIndex % EMBED_COLORS.length];
-  embedColorIndex++;
-  return color;
-}
 
-/* ---------- Main Submission Handler ---------- */
+/* ============================================================
+   MAIN SUBMISSION HANDLER
+   ============================================================ */
 function onSubmit(event) {
   const form = FormApp.getActiveForm();
   const latestResponse = form.getResponses().pop();
-  const allItems = form.getItems();
+  const allItems = form.getItems();  // FULL question list
 
   const responses = mapResponses(latestResponse);
+
+  discordMessageContent = createDiscordMessageContent(responses, allItems);
+  discordThreadName = createThreadName(responses, allItems);
+
   const firstPageQuestions = getFirstPageQuestions(form);
-
-  discordMessageContent = createDiscordMessageContent(responses, firstPageQuestions);
-  discordThreadName = createThreadName(responses, firstPageQuestions);
-
   const mainEmbedFields = createEmbedFields(firstPageQuestions, responses);
 
-  // FIRST SEND triggers auto forum detect and guarantees delivery:
   sendEmbedToDiscordWithFallback(mainEmbedFields);
 
-  // Now send all sections normally
   processSections(allItems, responses);
 }
 
-/* ---------- Map responses ---------- */
+/* ---------- Map all responses ---------- */
 function mapResponses(latestResponse) {
   return new Map(
     latestResponse.getItemResponses().map(item => [
@@ -64,23 +59,26 @@ function mapResponses(latestResponse) {
   );
 }
 
-/* ---------- Create Discord message (with Discord User ID) ---------- */
-function createDiscordMessageContent(responses, firstPageQuestions) {
-  const userID = responses.get(firstPageQuestions[userIDQuestion - 1]?.getTitle()) || "";
+/* ---------- Helper: Get question by index in FULL LIST ---------- */
+function getQuestionByIndex(allItems, index) {
+  const item = allItems[index - 1];
+  return item ? item.getTitle() : null;
+}
+
+/* ---------- Message content w/ User ID ---------- */
+function createDiscordMessageContent(responses, allItems) {
+  const userIdTitle = getQuestionByIndex(allItems, userIDQuestion);
+  const userID = responses.get(userIdTitle) || "";
+
   console.log(`Discord User ID: ${userID}`);
   return messageContent.replace("{discordUserID}", userID);
 }
 
-/* ---------- Get first page questions ---------- */
-function getFirstPageQuestions(form) {
-  const items = form.getItems();
-  const idx = items.findIndex(i => i.getType() === FormApp.ItemType.PAGE_BREAK);
-  return items.slice(0, idx !== -1 ? idx : undefined);
-}
+/* ---------- Thread Name Builder (GLOBAL lookup) ---------- */
+function createThreadName(responses, allItems) {
+  const usernameTitle = getQuestionByIndex(allItems, usernameQuestion);
+  const username = responses.get(usernameTitle) || "";
 
-/* ---------- Thread Name Builder ---------- */
-function createThreadName(responses, firstPageQuestions) {
-  const username = responses.get(firstPageQuestions[usernameQuestion - 1]?.getTitle()) || "";
   console.log(`Discord Username: ${username}`);
 
   if (!threadNamePosition) return "";
@@ -92,6 +90,13 @@ function createThreadName(responses, firstPageQuestions) {
     default: name = discordThreadNamePart;
   }
   return truncate(name, DISCORD_LIMITS.THREAD_NAME);
+}
+
+/* ---------- Get first page questions ---------- */
+function getFirstPageQuestions(form) {
+  const items = form.getItems();
+  const idx = items.findIndex(i => i.getType() === FormApp.ItemType.PAGE_BREAK);
+  return items.slice(0, idx !== -1 ? idx : undefined);
 }
 
 /* ---------- Embed Field Builder ---------- */
@@ -146,18 +151,11 @@ function formatDateTime(date) {
 }
 
 /* ============================================================
-   SEND WITH AUTO-FORUM DETECTION + GUARANTEED FIRST SEND
+   SEND FIRST EMBED (FORUM DETECTION)
    ============================================================ */
-
-/**
- * Send embed payload, auto-detect forum support. If the first
- * forum-style send fails, resend as a normal channel message
- * so the first embed is always delivered.
- */
 function sendEmbedToDiscordWithFallback(embedFields) {
   const formTitle = FormApp.getActiveForm().getTitle();
 
-  // Build forum-style payload (may include thread_name and tags)
   const forumPayload = {
     content: discordMessageContent,
     embeds: [{
@@ -175,7 +173,6 @@ function sendEmbedToDiscordWithFallback(embedFields) {
     forumPayload.thread_name = discordThreadName;
   }
 
-  // If we already know webhook is normal, just send normal payload
   if (!webhookSupportsForum && forumDetectionDone) {
     const normalPayload = {
       content: discordMessageContent,
@@ -187,64 +184,54 @@ function sendEmbedToDiscordWithFallback(embedFields) {
     return;
   }
 
-  // Try sending forum-style first (this may fail if webhook isn't forum)
   const firstRespText = sendToDiscord(forumPayload);
   const firstJson = tryParseJson(firstRespText);
 
-  // If the response indicates forum is unsupported, switch mode and resend as normal
   if (indicatesNotForum(firstJson)) {
     webhookSupportsForum = false;
     forumDetectionDone = true;
-    console.warn("⚠️ Webhook is NOT a forum channel. Switching to NORMAL MODE and resending first embed.");
+    console.warn("⚠️ Not a forum. Switching to NORMAL MODE.");
 
-    // Remove forum-only properties and resend as normal message
     const normalPayload = {
       content: discordMessageContent,
       embeds: forumPayload.embeds,
       components: []
     };
     const secondRespText = sendToDiscord(normalPayload);
-    logSendResult(secondRespText, "normal (resend after forum-fail)");
+    logSendResult(secondRespText, "normal (resend)");
     return;
   }
 
-  // If forum-style send was successful, record thread ID if present
   if (firstJson && firstJson.channel_id) {
     discordThreadId = firstJson.channel_id;
   } else if (firstJson && firstJson.id && !discordThreadId) {
-    // sometimes response might return id instead of channel_id
     discordThreadId = firstJson.id;
   }
 
-  forumDetectionDone = true; // detection completed
+  forumDetectionDone = true;
   logSendResult(firstRespText, "forum (first send)");
 }
 
-/* ---------- Helpers for detection & logging ---------- */
+/* ---------- Helpers ---------- */
 function tryParseJson(text) {
   try { return JSON.parse(text); } catch (e) { return null; }
 }
 
 function indicatesNotForum(json) {
   if (!json) return false;
-  // Known errors which indicate non-forum webhook or missing thread params
   const errCode = json.code;
   if (errCode === 220003 || errCode === 220001) return true;
-  // If Discord specifically complains about applied_tags or thread_name it's also not forum
   if (json.message && /forum|thread_name|applied_tags/i.test(json.message)) return true;
   return false;
 }
 
 function logSendResult(responseText, tag) {
   const j = tryParseJson(responseText);
-  if (j && j.code) {
-    console.warn(`Discord returned error on ${tag}:`, j);
-  } else {
-    console.log(`Sent (${tag}) — Discord response parsed.`);
-  }
+  if (j && j.code) console.warn(`Discord error (${tag}):`, j);
+  else console.log(`Sent (${tag})`);
 }
 
-/* ---------- Discord Sender (single low-level caller) ---------- */
+/* ---------- Sender ---------- */
 function sendToDiscord(payload) {
   try {
     const url = `${DISCORD_WEBHOOK_URL}${discordThreadId ? `&thread_id=${discordThreadId}` : ""}`;
@@ -279,12 +266,11 @@ function processSections(allItems, responses) {
   if (sectionTitle) sendSection(sectionTitle, sectionItems, responses);
 }
 
-/* ---------- Send section embed ---------- */
+/* ---------- Send each section ---------- */
 function sendSection(title, items, responses) {
   const fields = createEmbedFields(items, responses);
   if (!fields.length) return console.log(`Skipped empty section: ${title}`);
 
-  // Build payload
   const payload = {
     embeds: [{
       color: getNextEmbedColor(),
@@ -294,27 +280,31 @@ function sendSection(title, items, responses) {
     components: []
   };
 
-  // Only include applied_tags if webhook supports forum and tags are present
   if (webhookSupportsForum && Array.isArray(DISCORD_FORUM_TAGS) && DISCORD_FORUM_TAGS.length) {
     payload.applied_tags = DISCORD_FORUM_TAGS;
   }
 
-  // If thread was created (forum success), subsequent sends should include &thread_id param via sendToDiscord's URL
   const respText = sendToDiscord(payload);
   const json = tryParseJson(respText);
+
   if (json && json.code) {
-    console.warn("Discord returned error for section send:", json);
-    // If first section send shows a forum problem after detection, turn off forum mode to avoid further errors
+    console.warn("Section error:", json);
     if (!forumDetectionDone && indicatesNotForum(json)) {
       webhookSupportsForum = false;
       forumDetectionDone = true;
     }
   }
 
-  console.log(`Sent section embed: ${title}`);
+  console.log(`Sent section: ${title}`);
 }
 
-/* ---------- Utility: truncate text ---------- */
+/* ---------- Utility ---------- */
 function truncate(text, max, suffix = "...") {
   return text.length > max ? text.slice(0, max - suffix.length) + suffix : text;
+}
+
+function getNextEmbedColor() {
+  const color = EMBED_COLORS[embedColorIndex % EMBED_COLORS.length];
+  embedColorIndex++;
+  return color;
 }

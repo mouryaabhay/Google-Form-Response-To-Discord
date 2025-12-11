@@ -21,10 +21,16 @@
 <h1></h1>
 
 > [!NOTE]
-> - Make sure your form includes a Discord username field. Placing it as question #2 is recommended (you can change this index in `Config.gs`). This value is used to build thread titles in forum channels.
-> - For best display results, keep your question titles on a single line. While multi-line questions won’t break the script, Discord may display them unevenly inside embeds.
-> - The script works best with a forum-channel webhook, but normal channel webhooks are fully supported. It automatically detects the webhook type and switches behavior accordingly.
-> - All Google Form answer types are supported. However, grid-style questions (multiple rows/columns) cannot be visually formatted well in Discord embeds due to Discord’s limited markdowns.
+>
+> * Ensure your form includes a **Discord username** field. It’s recommended to place it as question #2 (this can be adjusted in `Config.gs`). This value is used to generate thread titles in forum channels.
+> * For optimal display, keep your **question titles on a single line**. Multi-line questions won’t break the script, but Discord may render them unevenly inside embeds.
+> * The script works best with a **forum-channel webhook**, though normal channel webhooks are fully supported. It automatically detects the webhook type and adapts its behavior.
+> * All Google Form answer types are supported. **However, grid-style questions** (multiple rows/columns) cannot be visually formatted well in Discord embeds due to Discord’s markdown limitations.
+> * If your **username or user ID question is in a different section**, adjust the question number by adding 1 for each section title and counting all previous questions.
+>
+>   * Example: Suppose you have 2 sections, each with 5 questions, and the username/user ID question is the first question in section 2. The calculation is:
+>     `5 (questions in section 1) + 1 (section 2 title) + 1 (position in section 2) = 7`
+>     So you would set `userIDQuestion`/`userNameQuestion` to 7. Apply the same logic for other questions in different sections.
 
 <!-- Steps-by-Step Instructions -->
 <h1></h1>
