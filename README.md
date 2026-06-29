@@ -1,244 +1,306 @@
-<!-- Title & Description -->
-<h1></h1>
 <h1 align="center">Google Form Responses to Discord</h1>
-<h3 align="center">
-    This guide will walk you through the steps to automatically send responses from your Google Form to a designated Discord channel. Whether you're gathering feedback, organizing events, or collecting data, integrating Google Forms with Discord can streamline your workflow.
-</h3>
+<p align="center">
+  Automatically send Google Form submissions to Discord as rich embeds — with forum channel support, thread naming, and auto-tagging.
+</p>
+<p align="center">
+  <img src="https://hits.sh/github.com/mouryaabhay/Google-Form-Response-To-Discord.svg?label=Views&color=blue" alt="Views">
+  <img src="https://img.shields.io/github/stars/mouryaabhay/Google-Form-Response-To-Discord?style=flat" alt="Stars">
+  <img src="https://img.shields.io/github/forks/mouryaabhay/Google-Form-Response-To-Discord?style=flat" alt="Forks">
+  <img src="https://img.shields.io/github/license/mouryaabhay/Google-Form-Response-To-Discord?style=flat" alt="License">
+</p>
 
-<!-- Why Use This Script -->
-<h1></h1>
-<h3>🌟 Key Features</h3>
-<ul>
-    <li>Fast execution and reliable performance</li>
-    <li>Handles long responses without breaking</li>
-    <li>Auto-truncates content to meet Discord limits</li>
-    <li>Organizes responses into multiple embeds by form sections</li>
-    <li>Supports all Google Form response types</li>
-    <li>Customizable thread naming and auto-tagging</li>
-</ul>
+---
 
-<!-- Prerequisites -->
-<h1></h1>
+## ✨ Features
+
+- Sends form submissions to Discord as rich embeds
+- Auto-detects forum vs. normal channel webhooks — no manual configuration needed
+- Creates a Discord forum thread per submission with a custom name and tags
+- Handles multi-section forms by sending one embed per section
+- Supports all Google Form response types (short/long text, multiple choice, checkbox, date, time, file upload)
+- Auto-truncates content to fit Discord's embed limits
+- Mentions the submitter via their Discord user ID
+
+---
+
+## 📋 Prerequisites
+
+Before starting, make sure you have:
+
+- A Google Form (you'll add a **Discord Username** and **Discord User ID** field to it)
+- A Discord server where you have the **Manage Webhooks** permission
+- No coding experience required — just copy, paste, and configure
+
+---
+
+## 🚀 Setup Guide
+
+### Step 1 — Create Your Google Form
+
+1. Go to [form.new](https://form.new) to create a new Google Form
+2. Add a **Discord Username** field — recommended as **question #2**
+3. Add a **Discord User ID** field — recommended as **question #3**
+
+> [!TIP]
+> Keep question titles on a single line. Multi-line titles render unevenly inside Discord embeds.
+
+---
+
+### Step 2 — Open the Script Editor
+
+In your Google Form, click the **⋮** menu (top right) → **Script editor**
+
+---
+
+### Step 3 — Add the Script Files
+
+**Code.gs** (the existing file)
+1. Copy the full contents of [`Code.gs`](Google_Apps_Script_V2/Code.gs) from this repo
+2. In the Script Editor, open the existing `Code.gs` file, delete everything, and paste in the copied code
+3. Save with **Ctrl+S** / **Cmd+S**
+
+**Config.gs** (new file)
+1. Copy the full contents of [`Config.gs`](Google_Apps_Script_V2/Config.gs) from this repo
+2. In the Script Editor, click **+** next to **Files** → **Script** → name it `Config`
+3. Delete the placeholder code, paste in the copied code, and save
+
+---
+
+### Step 4 — Create a Discord Webhook
+
+1. Open the Discord channel where you want form responses to appear
+2. Go to **Edit Channel → Integrations → Webhooks → New Webhook**
+3. Give it a name and icon (optional), then click **Copy Webhook URL**
+4. Keep this URL — you'll paste it into `Config.gs` in the next step
+
+> [!TIP]
+> For best results, use a **Forum channel** webhook. The script will automatically create a new thread for each form submission.
+
+---
+
+### Step 5 — Configure Config.gs
+
+Open `Config.gs` in the Script Editor and fill in your values. See the [Configuration Reference](#️-configuration-reference) table below for full details.
+
+**At minimum**, replace `YOUR_WEBHOOK_URL` with your Discord webhook URL.  
+Make sure the URL ends with `?wait=true` — do not remove it.
+
+---
+
+### Step 6 — Set Up the Trigger
+
+1. In the Script Editor, click the **Triggers** icon (alarm clock) in the left sidebar
+2. Click **+ Add Trigger** (bottom right corner)
+3. Configure it as shown in the image below, then click **Save**
+
+<a>
+  <img alt="Trigger Configuration" src="https://github.com/mouryaabhay/Google_Form_Response_To_Discord/assets/158826825/3a9ec28e-8878-48fa-9282-d466e8d54529">
+</a>
 
 > [!NOTE]
->
-> * Ensure your form includes a **Discord username** field. It’s recommended to place it as question #2 (this can be adjusted in `Config.gs`). This value is used to generate thread titles in forum channels.
-> * For optimal display, keep your **question titles on a single line**. Multi-line questions won’t break the script, but Discord may render them unevenly inside embeds.
-> * The script works best with a **forum-channel webhook**, though normal channel webhooks are fully supported. It automatically detects the webhook type and adapts its behavior.
-> * All Google Form answer types are supported. **However, grid-style questions** (multiple rows/columns) cannot be visually formatted well in Discord embeds due to Discord’s markdown limitations.
-> * If your **username or user ID question is in a different section**, adjust the question number by adding 1 for each section title and counting all previous questions.
->
->   * Example: Suppose you have 2 sections, each with 5 questions, and the username/user ID question is the first question in section 2. The calculation is:
->     `5 (questions in section 1) + 1 (section 2 title) + 1 (position in section 2) = 7`
->     So you would set `userIDQuestion`/`userNameQuestion` to 7. Apply the same logic for other questions in different sections.
+> On saving the trigger, Google will ask you to authorize the script. Click **Review Permissions → Allow**. If you see a "Google hasn't verified this app" warning, click **Advanced → Go to [your script name] (unsafe)** — this is normal for personal scripts.
 
-<!-- Steps-by-Step Instructions -->
-<h1></h1>
-<h3>🚀 Setup Instructions</h3><br>
-<ol>
-    <!-- Step 1 -->
-    <li>
-        <strong>Form Creation</strong>
-        <ol>
-            <li>Visit https://form.new/ to create your Google Form</li>
-            <li>Include a Discord username field (recommended as question #2)</li>
-            <li>Include a Discord user ID field (recommended as question #3)</li>
-        </ol>
-    </li>
-    <br>
-    <!-- Step 2 -->
-    <li>
-        <strong>Open the Script Editor</strong>
-        <p>Click the <code> ⋮ </code> (Meatballs Menu) and select <code>Script editor</code>.</p>
-    </li>
-    <br>
-    <!-- Step 3 -->
-    <li>
-        <strong>Creating Files & Pasting the Google Script</strong>
-        <ol>
-            <!-- Step 3.1 -->
-            <li>
-                <strong>Opening Existing Script: Code.gs</strong>
-                <ol>
-                    <li>Navigate to the <a href = "Google_Apps_Script_V2\Code.gs">Code.gs</a> file in this repo and copy the code within it</li>
-                    <li>When you open the Google Apps Script editor, within the Files section on left, you'll find a file named "Code.gs" by default</li>
-                    <li>Navigate to "Code.gs", delete the existing code, paste in the new code you copied earlier and save it</li>
-                    <li>On the right of <code>Debug</code> button, select <code>onSubmit</code></li>
-                </ol>
-            </li>
-            <!-- Step 3.2 -->
-            <li>
-                <strong>Creating a New Script: Config.gs</strong>
-                <ol>
-                    <li>Navigate to the <a href = "Google_Apps_Script_V2\Config.gs">Config.gs</a> file in this repo and copy the code within it</li>
-                    <li>In the Google Apps Script editor, click the <code> + </code> icon in the "<strong>Files</strong>" section. Then, select <code>Script</code> to create a new file and name it "Config.gs"</li>
-                    <li>Navigate to "Config.gs", delete the existing code, paste in the new code you copied earlier and save it</li>
-                </ol>
-            </li>
-        </ol>
-    </li>
-    <br>
-    <!-- Step 4 -->
-    <li>
-        <strong>Create a Discord Webhook</strong>
-        <ol>
-            <li>Navigate to the Discord forum channel where you want the form submission responses to appear</li>
-            <li>Click on Edit Channel (gear icon) and Go to <code>Integrations > Webhooks</code></li>
-            <li>Create a new webhook and edit the webhook’s name and icon as desired</li>
-            <li>Copy the webhook link for later use</li>
-        </ol>
-    </li>
-    <br>
-    <!-- Step 5 -->
-    <li>
-        <strong>Update the variable values in "Config.gs"</strong>
-        <ol>
-            <li>Replace <code>YOUR_WEBHOOK_URL</code> with your copied Discord webhook URL</li>
-            <li>Configure the following variables as needed:
-                <ul type="disc">
-                    <li><strong>DISCORD_WEBHOOK_URL</strong>
-                        <br>• <code>YOUR_WEBHOOK_URL</code> must be replaced with webhook url
-                    </li>
-                    <li><strong>DISCORD_FORUM_TAGS</strong>
-                        <br>• Add forum tag IDs if you want tags on forum posts
-                        <br>• Tag ID must be within double quotes
-                        <br>• Format: <code>[ "1163454653917302825", "1163459173917302825" ]</code>
-                        <br>• Leave empty <code>[]</code> if not using tags
-                    </li>
-                    <li><strong>userIDQuestion</strong>
-                        <br>• Keep as 3 (default) if user ID question is third
-                        <br>• Or change to match the position number of your user ID question (e.g., if it's the 5th question, change to 5)
-                    </li>
-                    <li><strong>usernameQuestion</strong>
-                        <br>• Keep as 2 (default) if username question is second
-                        <br>• Or change to match the position number of your username question (e.g., if it's the 5th question, change to 5)
-                    </li>
-                    <li><strong>discordThreadNamePart</strong>
-                        <br>• Customize the thread name text
-                        <br>• Example: "Submitted a Form"
-                    </li>
-                    <li><strong>threadNamePosition</strong>
-                        <br>• Determines where discordThreadNamePart appears in the thread name
-                        <br>• Set to <code>start</code> or <code>end</code>
-                        <br>• Set to <code>NULL</code> if you don't want it
-                        <br>• Examples (assuming discordThreadNamePart value is "Submitted a Form"):
-                        <br>&nbsp;&nbsp;- If <code>start</code>: "Submitted a Form @username"
-                        <br>&nbsp;&nbsp;- If <code>end</code>: "@username Submitted a Form"
-                        <br>&nbsp;&nbsp;- If <code>NULL</code>: "Submitted a Form"
-                    </li>
-                    <li><strong>messageContent</strong>
-                        <br>• Customize message that appear outside of embed
-                        <br>• Available placeholders:
-                        <br>&nbsp;&nbsp;- <code>{discordUserID}</code>: Discord user ID of the applicant
-                        <br>• Refer to "Best Practices" for creative usage examples
-                    </li>
-                    <li><strong>noAnswerMessage</strong>
-                        <br>• Custom message for unanswered questions
-                    </li>
-                    <li><strong>skipEmptyResponses</strong>
-                        <br>• Set to true to hide empty responses
-                        <br>• Set to false to show all responses
-                    </li>
-                    <li><strong>discordEmbedColor</strong>
-                        <br>• Set embed color using hex color code (e.g., "#5865f2") or leave default value if preferred
-                    </li>
-                </ul>
-            </li>
-        </ol>
-    </li>
-    <br>
-    <!-- Step 6 -->
-    <li>
-        <strong>Trigger Setup</strong>
-        <ol>
-            <li>Navigate to the "Triggers" page by clicking the <code>Triggers</code> option (alarm clock icon) on the left side of the screen</li>
-            <li>
-                Click the <code>Add Trigger</code> button in the bottom right corner of the screen. Update the settings as shown in the image below, and then save your changes.<br>
-                <a rel="noopener">
-                    <img alt="Trigger Configuration" align="center" src="https://github.com/mouryaabhay/Google_Form_Response_To_Discord/assets/158826825/3a9ec28e-8878-48fa-9282-d466e8d54529">
-                </a>
-            </li>
-            <br>
-        </ol>
-    </li>
-    <br>
-    <!-- Step 7 -->
-    <li>
-        <strong>Testing the Integration</strong>
-        <ol>
-            <li>Click the <code>▷ Run</code> button to test the setup</li>
-            <li>Note: You'll need at least one form submission to test properly, as the script uses the most recent response</li>
-        </ol>
-    </li>
-</ol>
-<br>
+---
 
-<h1></h1>
-<h3>📋 Best Practices</h3>
+### Step 7 — Test the Integration
 
-<ol type="I">
-    <li>
-        <strong>Form Submissions Organization</strong>
-        <p>Use tags to easily categorize and track form status:</p>
-        <ul>
-            <li><strong>🔍 Pending Review:</strong> For submissions awaiting evaluation</li>
-            <li><strong>👀 Under Review:</strong> For applications currently being evaluated</li>
-            <li><strong>❓ Needs More Info:</strong> For applications or requests that require additional information</li>
-            <li><strong>⚠️ Suspicious:</strong> To flag submissions that require further investigation</li>
-            <li><strong>📅 Scheduled Interview:</strong> For submissions that have progressed to the interview stage</li>
-            <li><strong>❌ Rejected:</strong> For submissions that do not meet the necessary criteria</li>
-            <li><strong>✅ Approved:</strong> For submissions that have been successfully accepted</li>
-            <li><strong>📁 Archived:</strong> For completed applications that can be stored for future reference</li>
-        </ul>
-    </li>
-    <li>
-        <strong>Message Customization Tips</strong>
-        <ul>
-            <li><strong>Staff Notification</strong>
-                <br>• Use <code><@&ROLE_ID></code> to mention staff roles
-                <br>• Example: <code>Hey <@&1234567890123456789>, new submission!</code>
-            </li>
-            <li>Hidden Text format:
-                <br>• I’ve demonstrated its use in 'Config.gs' for reference.
-                <br>• Please use it responsibly!
-                <br><pre><code>[Text to show] ||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​|| _ _ _ _ _ _ [Text to hide]</code></pre>
-            </li>
-        </ul>
-    </li>
-</ol>
+1. Submit a test response to your Google Form
+2. Back in the Script Editor, confirm `onSubmit` is selected in the function dropdown (next to the **▷ Run** button), then click **Run**
+3. Open the **Execution log** (**View → Logs**) to check for any errors
+4. Verify the message appears in your Discord channel
 
-<h1></h1>
-<h3>🔍 Troubleshooting: Common Issues</h3>
-<ol>
-    <li>
-        <strong>Webhook not working</strong>
-        <br>• Webhook URL is valid and correctly copied (should start with <code>https://discord.com/api/webhooks/</code>)
-        <br>• Webhook hasn't been deleted or regenerated in Discord
-        <br>• The channel where webhook was created still exists
-        <p><strong>Fix:</strong> Try creating and using a new webhook if issues persist.</p>
-    </li>
-    <li>
-        <strong>Script errors</strong>
-        <br>• Ensure that on the right of <code>Debug</code> button, <code>onSubmit</code> is selected
-        <br>• Ensure all required variable values are properly configured
-        <br>• Check trigger configuration
-    </li>
-</ol>
+---
 
-<h1></h1>
+## ⚙️ Configuration Reference
+
+| Variable | Type | Default | Description |
+|---|---|---|---|
+| `DISCORD_WEBHOOK_URL` | `string` | — | Your Discord webhook URL. Must end with `?wait=true`. |
+| `DISCORD_FORUM_TAGS` | `string[]` | `[]` | Forum tag IDs to apply to new posts. Leave as `[]` if not using forum tags. |
+| `userIDQuestion` | `number` | `3` | Position of the Discord user ID question in your form (counting from 1). |
+| `usernameQuestion` | `number` | `2` | Position of the Discord username question in your form (counting from 1). |
+| `discordThreadNamePart` | `string` | `" Submitted a Form"` | Static text included in the forum thread name. |
+| `threadNamePosition` | `string \| null` | `"start"` | Where the static text appears: `"start"`, `"end"`, or `null` to use only the username. |
+| `messageContent` | `string` | `"<@{discordUserID}> submitted a form!"` | Text sent outside the embed. Use `{discordUserID}` to mention the submitter. |
+| `noAnswerMessage` | `string` | `"No answer provided!"` | Text shown for unanswered optional questions. |
+| `skipEmptyResponses` | `boolean` | `false` | Set to `true` to hide unanswered questions from the embed entirely. |
+
+### How to count question positions
+
+Each form item — including section title (page break) — counts as one position.
+
+**Example:** A form with 2 sections, 5 questions each, where username is the 1st question of section 2:
+
+```
+Position 1: Name
+Position 2: Email
+Position 3: Discord User ID
+Position 4: Question 4
+Position 5: Question 5
+--- Section 2 title (counts as position 6) ---
+Position 7: Discord Username    ← usernameQuestion = 7
+Position 8: ...
+```
+
+### How to find Discord forum tag IDs
+
+Enable **Developer Mode** in Discord (**User Settings → Advanced → Developer Mode**), then right-click a tag in your forum channel to copy its ID.
+
+---
+
+## 💡 Examples
+
+### Thread name combinations
+
+With `discordThreadNamePart = " | Application"` and username `JohnDoe`:
+
+| `threadNamePosition` | Resulting thread name |
+|---|---|
+| `"start"` | `\| Application JohnDoe` |
+| `"end"` | `JohnDoe \| Application` |
+| `null` | `JohnDoe` |
+
+### Mentioning a role when a submission arrives
+
+```
+<@&YOUR_ROLE_ID> — new submission from <@{discordUserID}>!
+```
+
+### Forum tags configuration
+
+```js
+const DISCORD_FORUM_TAGS = [
+    "000000000000000001",
+    "000000000000000002"
+];
+```
+
+Leave as `[]` if you're not using forum tags or using a normal text channel.
+
+---
+
+## 🏷️ Best Practices
+
+### Organizing submissions with forum tags
+
+Use Discord forum tags to track where each submission stands:
+
+| Tag | Use for |
+|---|---|
+| 🔍 Pending Review | Submissions awaiting evaluation |
+| 👀 Under Review | Currently being reviewed |
+| ❓ Needs More Info | Requires follow-up from the submitter |
+| ⚠️ Suspicious | Flagged for investigation |
+| 📅 Interview Scheduled | Progressed to interview stage |
+| ❌ Rejected | Did not meet the criteria |
+| ✅ Approved | Accepted |
+| 📁 Archived | Completed, stored for reference |
+
+### Notifying staff on new submissions
+
+In `messageContent`, use a role mention so your team gets pinged automatically:
+
+```
+<@&ROLE_ID> — new submission received from <@{discordUserID}>!
+```
+
+---
+
+## 🔍 Troubleshooting
+
+### "DISCORD_WEBHOOK_URL is not configured" error
+
+The webhook URL in `Config.gs` is still the placeholder. Replace `YOUR_WEBHOOK_URL` with your actual Discord webhook URL and ensure it ends with `?wait=true`.
+
+---
+
+### No message appears in Discord
+
+- Confirm the webhook URL is correct and the webhook hasn't been deleted or regenerated in Discord
+- Make sure the channel the webhook was created in still exists
+- Open **View → Logs** in the Script Editor — error details will appear there
+
+---
+
+### Authorization error on first run
+
+Google requires you to authorize the script before it can run. When prompted:
+1. Click **Review Permissions**
+2. Select your Google account
+3. If you see "Google hasn't verified this app", click **Advanced → Go to [script name] (unsafe)**
+4. Click **Allow**
+
+This is expected for personal scripts and is safe to proceed with.
+
+---
+
+### Trigger fires but nothing happens
+
+- Verify the trigger type is **From form → On form submit** (not time-based)
+- Click the **⋮** menu next to your trigger in the Triggers page → **Executions** to see if the script is actually running and what errors occurred
+- Ensure `onSubmit` is selected in the function dropdown before testing manually
+
+---
+
+### Wrong username or user ID is being picked up
+
+The `usernameQuestion` or `userIDQuestion` values in `Config.gs` don't match the actual positions in your form. Recount carefully — each question **and each section title (page break)** takes up one position.
+
+Use the counting example in the [Configuration Reference](#how-to-count-question-positions) section above.
+
+---
+
+### Forum thread not being created
+
+- Confirm the webhook was created inside a **Forum channel** — not a Text, Announcement, or Voice channel
+- Check that `discordThreadName` is not empty. If `threadNamePosition` is `null` and the username field is blank, no thread name is set
+- Ensure `threadNamePosition` is the JavaScript value `null`, not the string `"null"` or `"NULL"`
+
+---
+
+### Messages are getting cut off
+
+Discord enforces strict length limits. The script truncates automatically, but if important content is being cut:
+
+| Element | Limit |
+|---|---|
+| Thread name | 100 characters |
+| Embed description | 4,096 characters |
+| Field name (question title) | 256 characters |
+| Field value (answer) | 1,024 characters |
+
+Shorten your question titles or break up long answers to stay within these limits.
+
+---
+
+### Script times out on large forms
+
+Google Apps Script has a **6-minute execution limit**. Forms with many sections each require a separate Discord API call, which adds up. If you hit this limit, consider reducing the number of sections or combining related questions.
+
+---
+
+### Webhook was deleted or regenerated in Discord
+
+Old webhooks cannot be restored. Create a new webhook in the Discord channel and update `DISCORD_WEBHOOK_URL` in `Config.gs` with the new URL.
+
+---
+
+### Grid-style questions look broken in Discord
+
+Multiple-choice grid and checkbox grid questions cannot be formatted cleanly inside Discord embeds due to Discord's Markdown limitations. The data will still be sent, but it may appear as a raw comma-separated string.
+
+---
+
+## 📜 Version Notes
 
 > [!CAUTION]
-> Version 1 Deprecated<br>
-> V1 of this project is no longer supported or updated.
-> Please use **V2** from this repository for all new setups.
+> **Version 1 is deprecated** and no longer maintained or supported.
+> Use **V2** (`Google_Apps_Script_V2/`) for all new setups.
 
-> [!IMPORTANT]
-> Need help? Join our Discord servers:
-> - Creation Guide: https://discord.com/invite/E4KRWJW49B
->
-> For technical issues:
-> - Create a GitHub issue
-> - Include error messages
-> - Provide steps to reproduce
+---
 
-![Views](https://hits.sh/github.com/mouryaabhay/Google-Form-Response-To-Discord.svg?label=Total%20Views)
+## 💬 Support
+
+**Need help?**
+- [Open a GitHub issue](https://github.com/mouryaabhay/Google-Form-Response-To-Discord/issues) — include your error message, form structure, and steps to reproduce
+- Join the community Discord: https://discord.com/invite/E4KRWJW49B

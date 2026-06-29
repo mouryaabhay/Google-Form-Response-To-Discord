@@ -28,17 +28,25 @@ const EMBED_COLORS = [
 
 let embedColorIndex = 0;
 
+/* ---------- Config Validation ---------- */
+function validateConfig() {
+  if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.startsWith("YOUR_WEBHOOK_URL")) {
+    throw new Error("DISCORD_WEBHOOK_URL is not configured. Update Config.gs before running.");
+  }
+}
+
 /* ============================================================
    MAIN SUBMISSION HANDLER
    ============================================================ */
 function onSubmit(event) {
+  validateConfig();
   const form = FormApp.getActiveForm();
   const latestResponse = form.getResponses().pop();
   const allItems = form.getItems();  // FULL question list
 
   const responses = mapResponses(latestResponse);
 
-  discordMessageContent = createDiscordMessageContent(responses, allItems);
+  let discordMessageContent = createDiscordMessageContent(responses, allItems);
   discordThreadName = createThreadName(responses, allItems);
 
   const firstPageQuestions = getFirstPageQuestions(form);
@@ -241,7 +249,12 @@ function sendToDiscord(payload) {
       payload: JSON.stringify(payload),
       muteHttpExceptions: true
     });
-    return res.getContentText();
+    const code = res.getResponseCode();
+    const text = res.getContentText();
+    if (code < 200 || code >= 300) {
+      console.warn(`Discord HTTP ${code}:`, text);
+    }
+    return text;
   } catch (e) {
     console.error("Error sending to Discord:", e);
     return "{}";
