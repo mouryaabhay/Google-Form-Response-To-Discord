@@ -9,6 +9,11 @@
   <img src="https://img.shields.io/github/license/mouryaabhay/Google-Form-Response-To-Discord?style=flat" alt="License">
 </p>
 
+<p align="center">
+  <strong>🔧 <a href="ui/index.html">Try the Config Builder</a></strong> — fill in a form, get a ready-to-paste script back. No manual <code>Config.gs</code> editing required.<br />
+  <sub>Open <a href="ui/index.html"><code>ui/index.html</code></a> in your browser (works offline, no build step) — or visit the hosted version if GitHub Pages is enabled for this repo.</sub>
+</p>
+
 ---
 
 ## ✨ Features
@@ -56,18 +61,20 @@ In your Google Form, click the **⋮** menu (top right) → **Script editor**
 
 ### Step 3 — Add the Script Files
 
-**Code.gs** (the existing file)
-1. Copy the full contents of [`apps-script/Code.gs`](apps-script/Code.gs) from this repo
-2. In the Script Editor, open the existing `Code.gs` file, delete everything, and paste in the copied code
-3. Save with **Ctrl+S** / **Cmd+S**
-
-**Config.gs** (new file)
-1. Copy the full contents of [`apps-script/Config.gs`](apps-script/Config.gs) from this repo
-2. In the Script Editor, click **+** next to **Files** → **Script** → name it `Config`
-3. Delete the placeholder code, paste in the copied code, and save
+**Option A — Config Builder (recommended)**
+1. Open [`ui/index.html`](ui/index.html) in your browser and fill in your settings
+2. Click **Copy** or **Download** to get one combined, ready-to-paste file
+3. In the Script Editor, open the existing `Code.gs` file, delete everything, and paste in the generated code
+4. Save with **Ctrl+S** / **Cmd+S**
 
 > [!TIP]
-> Prefer a visual editor over hand-editing `Config.gs`? Open [`ui/index.html`](ui/index.html) in a browser (works locally, no build step) or via the hosted Config Builder if GitHub Pages is enabled for this repo. Fill in your settings and it generates a single combined file — paste that instead of doing Code.gs and Config.gs separately.
+> Don't have your Discord webhook URL yet? Do [Step 4](#step-4--create-a-discord-webhook) first, then come back and fill in the Config Builder in one pass — otherwise leave the webhook field as the placeholder for now and paste in the real URL later (**Ctrl+F** for `YOUR_WEBHOOK_URL` in `Code.gs`).
+
+**Option B — Manual copy-paste**
+1. Copy the full contents of [`apps-script/Code.gs`](apps-script/Code.gs) from this repo, paste it into the existing `Code.gs` file in the Script Editor (replacing everything), and save
+2. Copy the full contents of [`apps-script/Config.gs`](apps-script/Config.gs) from this repo
+3. In the Script Editor, click **+** next to **Files** → **Script** → name it `Config`
+4. Delete the placeholder code, paste in the copied code, and save — you'll fill in the values in [Step 5](#step-5--configure-configgs)
 
 ---
 
@@ -76,7 +83,7 @@ In your Google Form, click the **⋮** menu (top right) → **Script editor**
 1. Open the Discord channel where you want form responses to appear
 2. Go to **Edit Channel → Integrations → Webhooks → New Webhook**
 3. Give it a name and icon (optional), then click **Copy Webhook URL**
-4. Keep this URL — you'll paste it into `Config.gs` in the next step
+4. Keep this URL — paste it into the Config Builder (Option A) or `Config.gs` (Option B, next step)
 
 > [!TIP]
 > For best results, use a **Forum channel** webhook. The script will automatically create a new thread for each form submission.
@@ -85,7 +92,9 @@ In your Google Form, click the **⋮** menu (top right) → **Script editor**
 
 ### Step 5 — Configure Config.gs
 
-Open `Config.gs` in the Script Editor and fill in your values. See the [Configuration Reference](#️-configuration-reference) table below for full details.
+**If you used the Config Builder (Option A):** your webhook URL and settings are already baked into the file you pasted — just make sure `YOUR_WEBHOOK_URL` was replaced with a real URL. You can skip the rest of this step.
+
+**If you copy-pasted manually (Option B):** open `Config.gs` in the Script Editor and fill in your values. See the [Configuration Reference](#️-configuration-reference) table below for full details.
 
 **At minimum**, replace `YOUR_WEBHOOK_URL` with your Discord webhook URL.  
 Make sure the URL ends with `?wait=true` — do not remove it.
