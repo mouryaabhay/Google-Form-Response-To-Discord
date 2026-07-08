@@ -340,7 +340,7 @@ async function loadGithubStars() {
   const oneHour = 60 * 60 * 1000;
 
   if (cached && Date.now() - cached.time < oneHour) {
-    starEl.textContent = "★ " + formatStarCount(cached.count);
+    starEl.textContent = formatStarCount(cached.count);
     return;
   }
 
@@ -349,7 +349,7 @@ async function loadGithubStars() {
     if (!res.ok) return;
     const data = await res.json();
     if (typeof data.stargazers_count !== "number") return;
-    starEl.textContent = "★ " + formatStarCount(data.stargazers_count);
+    starEl.textContent = formatStarCount(data.stargazers_count);
     localStorage.setItem(cacheKey, JSON.stringify({ count: data.stargazers_count, time: Date.now() }));
   } catch (e) {
     /* offline or rate-limited — icon still links to GitHub without a count */

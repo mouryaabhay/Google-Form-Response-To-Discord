@@ -131,15 +131,12 @@ a { color: inherit; }
 }
 
 .topbar-title .mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
+  display: block;
+  width: 1.85rem;
+  height: 1.85rem;
   border-radius: 0.45rem;
-  background: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-  font-size: 0.9rem;
+  flex-shrink: 0;
+  object-fit: cover;
 }
 
 .topbar-actions {
@@ -196,11 +193,14 @@ a { color: inherit; }
 .panel-code {
   min-width: 0;
   position: sticky;
-  top: 52px;
-  height: calc(100vh - 52px);
+  top: calc(52px + 1.25rem);
+  height: calc(100vh - 52px - 2.5rem);
+  margin: 1.25rem 1.25rem 1.25rem 0;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid hsl(var(--border));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  overflow: hidden;
   background: hsl(var(--code-bg));
 }
 
@@ -579,7 +579,9 @@ a { color: inherit; }
     position: static;
     height: auto;
     min-height: calc(100vh - 104px);
-    border-left: none;
+    margin: 0;
+    border: none;
+    border-radius: 0;
     border-top: 1px solid hsl(var(--border));
   }
 
