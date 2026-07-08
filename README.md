@@ -10,8 +10,8 @@
 </p>
 
 <p align="center">
-  <strong>🔧 <a href="ui/index.html">Try the Config Builder</a></strong> — fill in a form, get a ready-to-paste script back. No manual <code>Config.gs</code> editing required.<br />
-  <sub>Open <a href="ui/index.html"><code>ui/index.html</code></a> in your browser (works offline, no build step) — or visit the hosted version if GitHub Pages is enabled for this repo.</sub>
+  <strong>🔧 <a href="https://mouryaabhay.github.io/Google-Form-Response-To-Discord/">Try the Config Builder</a></strong> — fill in a form, get a ready-to-paste script back. No manual <code>Config.gs</code> editing required.<br />
+  <sub>No internet, or the site above isn't live yet? Open <a href="ui/index.html"><code>ui/index.html</code></a> straight from this repo instead — same tool, works offline, no build step.</sub>
 </p>
 
 ---
@@ -26,7 +26,7 @@
 - Auto-truncates content to fit Discord's embed limits
 - Mentions the submitter via their Discord user ID
 - Fully customizable embed appearance — heading, answer formatting, and colors (random or fixed)
-- Visual [Config Builder](ui/index.html) generates a ready-to-paste script — no manual `Config.gs` editing required
+- Visual [Config Builder](https://mouryaabhay.github.io/Google-Form-Response-To-Discord/) generates a ready-to-paste script — no manual `Config.gs` editing required
 
 ---
 
@@ -61,16 +61,22 @@ In your Google Form, click the **⋮** menu (top right) → **Script editor**
 
 ### Step 3 — Add the Script Files
 
-**Option A — Config Builder (recommended)**
-1. Open [`ui/index.html`](ui/index.html) in your browser and fill in your settings
-2. Click **Copy** or **Download** to get one combined, ready-to-paste file
+**Option A — Config Builder, online (recommended)**
+1. Visit the hosted Config Builder: **https://mouryaabhay.github.io/Google-Form-Response-To-Discord/**
+2. Fill in your settings, then click **Copy** or **Download** to get one combined, ready-to-paste file
 3. In the Script Editor, open the existing `Code.gs` file, delete everything, and paste in the generated code
 4. Save with **Ctrl+S** / **Cmd+S**
+
+**Option B — Config Builder, local copy**
+
+Same tool as Option A, useful if the hosted site above isn't available (e.g. GitHub Pages not yet enabled for this repo) or you're offline.
+1. Clone or download this repo, then open [`ui/index.html`](ui/index.html) directly in your browser — no build step
+2. Follow steps 2–4 from Option A above
 
 > [!TIP]
 > Don't have your Discord webhook URL yet? Do [Step 4](#step-4--create-a-discord-webhook) first, then come back and fill in the Config Builder in one pass — otherwise leave the webhook field as the placeholder for now and paste in the real URL later (**Ctrl+F** for `YOUR_WEBHOOK_URL` in `Code.gs`).
 
-**Option B — Manual copy-paste**
+**Option C — Manual copy-paste**
 1. Copy the full contents of [`apps-script/Code.gs`](apps-script/Code.gs) from this repo, paste it into the existing `Code.gs` file in the Script Editor (replacing everything), and save
 2. Copy the full contents of [`apps-script/Config.gs`](apps-script/Config.gs) from this repo
 3. In the Script Editor, click **+** next to **Files** → **Script** → name it `Config`
@@ -83,7 +89,7 @@ In your Google Form, click the **⋮** menu (top right) → **Script editor**
 1. Open the Discord channel where you want form responses to appear
 2. Go to **Edit Channel → Integrations → Webhooks → New Webhook**
 3. Give it a name and icon (optional), then click **Copy Webhook URL**
-4. Keep this URL — paste it into the Config Builder (Option A) or `Config.gs` (Option B, next step)
+4. Keep this URL — paste it into the Config Builder (Option A/B) or `Config.gs` (Option C, next step)
 
 > [!TIP]
 > For best results, use a **Forum channel** webhook. The script will automatically create a new thread for each form submission.
@@ -92,9 +98,9 @@ In your Google Form, click the **⋮** menu (top right) → **Script editor**
 
 ### Step 5 — Configure Config.gs
 
-**If you used the Config Builder (Option A):** your webhook URL and settings are already baked into the file you pasted — just make sure `YOUR_WEBHOOK_URL` was replaced with a real URL. You can skip the rest of this step.
+**If you used the Config Builder (Option A/B):** your webhook URL and settings are already baked into the file you pasted — just make sure `YOUR_WEBHOOK_URL` was replaced with a real URL. You can skip the rest of this step.
 
-**If you copy-pasted manually (Option B):** open `Config.gs` in the Script Editor and fill in your values. See the [Configuration Reference](#️-configuration-reference) table below for full details.
+**If you copy-pasted manually (Option C):** open `Config.gs` in the Script Editor and fill in your values. See the [Configuration Reference](#️-configuration-reference) table below for full details.
 
 **At minimum**, replace `YOUR_WEBHOOK_URL` with your Discord webhook URL.  
 Make sure the URL ends with `?wait=true` — do not remove it.
