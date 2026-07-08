@@ -57,12 +57,12 @@ In your Google Form, click the **⋮** menu (top right) → **Script editor**
 ### Step 3 — Add the Script Files
 
 **Code.gs** (the existing file)
-1. Copy the full contents of [`Code.gs`](Code.gs) from this repo
+1. Copy the full contents of [`apps-script/Code.gs`](apps-script/Code.gs) from this repo
 2. In the Script Editor, open the existing `Code.gs` file, delete everything, and paste in the copied code
 3. Save with **Ctrl+S** / **Cmd+S**
 
 **Config.gs** (new file)
-1. Copy the full contents of [`Config.gs`](Config.gs) from this repo
+1. Copy the full contents of [`apps-script/Config.gs`](apps-script/Config.gs) from this repo
 2. In the Script Editor, click **+** next to **Files** → **Script** → name it `Config`
 3. Delete the placeholder code, paste in the copied code, and save
 
@@ -314,22 +314,8 @@ Multiple-choice grid and checkbox grid questions cannot be formatted cleanly ins
 
 ---
 
-## 📜 Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for notable changes between versions.
-
----
-
 ## 💬 Support
 
 **Need help?**
 - [Open a GitHub issue](https://github.com/mouryaabhay/Google-Form-Response-To-Discord/issues) — include your error message, form structure, and steps to reproduce
 - Join the community Discord: https://discord.com/invite/E4KRWJW49B
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for how to get set up. Please also review our [Code of Conduct](CODE_OF_CONDUCT.md).
-
-Found a security issue? Please follow the responsible disclosure process in [SECURITY.md](SECURITY.md) instead of opening a public issue.
