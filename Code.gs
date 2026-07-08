@@ -17,8 +17,6 @@ const DISCORD_LIMITS = {
   FIELD_VALUE: 1024
 };
 
-let embedColorIndex = 0;
-
 /* ---------- Config Validation ---------- */
 function validateConfig() {
   if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.startsWith("YOUR_WEBHOOK_URL")) {
@@ -308,7 +306,5 @@ function truncate(text, max, suffix = "...") {
 }
 
 function getNextEmbedColor() {
-  const color = EMBED_COLORS[embedColorIndex % EMBED_COLORS.length];
-  embedColorIndex++;
-  return color;
+  return EMBED_COLORS[Math.floor(Math.random() * EMBED_COLORS.length)];
 }

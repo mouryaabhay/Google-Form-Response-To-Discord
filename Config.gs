@@ -50,7 +50,8 @@ const embedDescriptionTemplate = "### {formTitle}";
 // Uses Discord markdown — e.g. ">>> " renders as a blockquote. Leave as "" for no styling.
 const embedFieldValuePrefix = ">>> ";
 
-// Embed colors (hex), cycled through in order for each embed/section sent
+// Embed colors (hex). One color picked at random per embed/section.
+// Use a single value here to always use that one color instead.
 const EMBED_COLORS = [
   0x1abc9c, 0x2ecc71, 0x3498db, 0x9b59b6,
   0xe91e63, 0xe67e22, 0xf1c40f, 0xe74c3c,

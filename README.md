@@ -126,7 +126,7 @@ Make sure the URL ends with `?wait=true` — do not remove it.
 | `skipEmptyResponses` | `boolean` | `false` | Set to `true` to hide unanswered questions from the embed entirely. |
 | `embedDescriptionTemplate` | `string` | `"### {formTitle}"` | Text shown at the top of the main embed. Use `{formTitle}` for the form's title. |
 | `embedFieldValuePrefix` | `string` | `">>> "` | Markdown prepended to each answer inside the embed. Leave as `""` for no styling. |
-| `EMBED_COLORS` | `number[]` | 20 preset hex colors | Colors cycled through for each embed/section sent, in order. |
+| `EMBED_COLORS` | `number[]` | 20 preset hex colors | One color picked at random per embed/section. Use a single-value array to always use that one color. |
 
 ### How to count question positions
 
@@ -189,7 +189,7 @@ const embedDescriptionTemplate = "New response to: {formTitle}";
 // No blockquote styling on answers
 const embedFieldValuePrefix = "";
 
-// Single brand color instead of the rotating palette
+// Single brand color instead of a random pick each time
 const EMBED_COLORS = [0x5865f2];
 ```
 
