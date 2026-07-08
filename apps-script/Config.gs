@@ -57,3 +57,7 @@ const noAnswerMessage = "No answer provided!";
 
 // Set to true to skip empty answers, false to include them
 const skipEmptyResponses = false;
+
+// Minimum gap (in milliseconds) between Discord webhook requests.
+// Increase this if you still hit Cloudflare 1015 rate limits.
+const requestIntervalMs = 2000;

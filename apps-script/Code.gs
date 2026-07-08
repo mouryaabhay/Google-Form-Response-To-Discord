@@ -22,9 +22,16 @@ const DISCORD_LIMITS = {
    Firing them with no gap reliably trips Cloudflare's edge rate limit
    (HTTP 429, "error code: 1015") in front of Discord, even though each
    request individually is well under Discord's own webhook rate limit. */
-const MIN_REQUEST_INTERVAL_MS = 1100;
+const MIN_REQUEST_INTERVAL_MS = resolveRequestIntervalMs();
 const MAX_RETRIES = 3;
 let lastDiscordRequestTime = 0;
+
+function resolveRequestIntervalMs() {
+  if (typeof requestIntervalMs === "number" && isFinite(requestIntervalMs) && requestIntervalMs >= 0) {
+    return Math.floor(requestIntervalMs);
+  }
+  return 2000;
+}
 
 /* ============================================================
    MAIN SUBMISSION HANDLER
@@ -270,6 +277,9 @@ function doSendToDiscord(payload) {
   } catch (e) {
     console.error("Error sending to Discord:", e);
     return { code: 0, text: "{}" };
+  } finally {
+    // Track request completion time so the next send starts >= 1s later.
+    lastDiscordRequestTime = Date.now();
   }
 }
 
@@ -278,7 +288,6 @@ function throttleDiscordRequest() {
   if (lastDiscordRequestTime !== 0 && elapsed < MIN_REQUEST_INTERVAL_MS) {
     Utilities.sleep(MIN_REQUEST_INTERVAL_MS - elapsed);
   }
-  lastDiscordRequestTime = Date.now();
 }
 
 function getRetryAfterMs(responseText) {
