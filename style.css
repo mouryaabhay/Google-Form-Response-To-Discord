@@ -256,6 +256,18 @@ a { color: inherit; }
   margin-top: -0.1rem;
 }
 
+.helper-warning {
+  color: hsl(var(--destructive));
+  font-weight: 500;
+}
+
+.input-warning {
+  border-color: hsl(var(--destructive)) !important;
+}
+.input-warning:focus {
+  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.15) !important;
+}
+
 .input, .select, .textarea {
   width: 100%;
   border: 1px solid hsl(var(--input));

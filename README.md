@@ -313,7 +313,13 @@ Shorten your question titles or break up long answers to stay within these limit
 
 ### Script times out on large forms
 
-Google Apps Script has a **6-minute execution limit**. Forms with many sections each require a separate Discord API call, which adds up. If you hit this limit, consider reducing the number of sections or combining related questions.
+Google Apps Script has a **6-minute execution limit**. Forms with many sections each require a separate Discord API call, which adds up — each request is deliberately paced about 1.1 seconds apart (see below), so a form with 20 sections adds roughly 20+ seconds on its own. If you hit the limit, consider reducing the number of sections or combining related questions.
+
+---
+
+### "Discord HTTP 429: error code: 1015" in the logs
+
+This is Cloudflare's edge rate limit (not Discord's own), triggered by sending several webhook requests back-to-back with no gap — common on multi-section forms. The script already paces requests roughly 1.1 seconds apart and retries automatically on a 429, so occasional 1015 warnings in the log that are followed by a successful retry are expected and not a problem. If a section's log line reads `Failed to send` rather than `Sent`, the retries were exhausted — resubmitting the form should succeed, since it's Discord/Cloudflare throttling, not a configuration issue.
 
 ---
 

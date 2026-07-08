@@ -17,18 +17,27 @@ const DISCORD_LIMITS = {
   FIELD_VALUE: 1024
 };
 
-/* ---------- Config Validation ---------- */
-function validateConfig() {
-  if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.startsWith("YOUR_WEBHOOK_URL")) {
-    throw new Error("DISCORD_WEBHOOK_URL is not configured. Update Config.gs before running.");
-  }
-}
+/* ---------- Request pacing ----------
+   Forms with several sections send several webhook requests back-to-back.
+   Firing them with no gap reliably trips Cloudflare's edge rate limit
+   (HTTP 429, "error code: 1015") in front of Discord, even though each
+   request individually is well under Discord's own webhook rate limit. */
+const MIN_REQUEST_INTERVAL_MS = 1100;
+const MAX_RETRIES = 3;
+let lastDiscordRequestTime = 0;
 
 /* ============================================================
    MAIN SUBMISSION HANDLER
+   Declared first so it's the default pick in the Apps Script editor's
+   "Select function" dropdown (used for both manual test runs and
+   trigger setup) — otherwise a helper function ends up selected by
+   default and testing silently does nothing.
    ============================================================ */
 function onSubmit(event) {
-  validateConfig();
+  if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.startsWith("YOUR_WEBHOOK_URL")) {
+    throw new Error("DISCORD_WEBHOOK_URL is not configured. Update Config.gs before running.");
+  }
+
   const form = FormApp.getActiveForm();
   const latestResponse = form.getResponses().pop();
   const allItems = form.getItems();  // FULL question list
@@ -176,13 +185,12 @@ function sendEmbedToDiscordWithFallback(embedFields, discordMessageContent) {
       embeds: forumPayload.embeds,
       components: []
     };
-    const normalResp = sendToDiscord(normalPayload);
-    logSendResult(normalResp, "normal (known)");
+    logSendResult(sendToDiscord(normalPayload), "normal (known)");
     return;
   }
 
-  const firstRespText = sendToDiscord(forumPayload);
-  const firstJson = tryParseJson(firstRespText);
+  const firstResult = sendToDiscord(forumPayload);
+  const firstJson = tryParseJson(firstResult.text);
 
   if (indicatesNotForum(firstJson)) {
     webhookSupportsForum = false;
@@ -194,8 +202,7 @@ function sendEmbedToDiscordWithFallback(embedFields, discordMessageContent) {
       embeds: forumPayload.embeds,
       components: []
     };
-    const secondRespText = sendToDiscord(normalPayload);
-    logSendResult(secondRespText, "normal (resend)");
+    logSendResult(sendToDiscord(normalPayload), "normal (resend)");
     return;
   }
 
@@ -206,7 +213,7 @@ function sendEmbedToDiscordWithFallback(embedFields, discordMessageContent) {
   }
 
   forumDetectionDone = true;
-  logSendResult(firstRespText, "forum (first send)");
+  logSendResult(firstResult, "forum (first send)");
 }
 
 /* ---------- Helpers ---------- */
@@ -222,14 +229,30 @@ function indicatesNotForum(json) {
   return false;
 }
 
-function logSendResult(responseText, tag) {
-  const j = tryParseJson(responseText);
-  if (j && j.code) console.warn(`Discord error (${tag}):`, j);
-  else console.log(`Sent (${tag})`);
+function logSendResult(result, tag) {
+  if (result.code >= 200 && result.code < 300) {
+    console.log(`Sent (${tag})`);
+  } else {
+    console.warn(`Failed to send (${tag}): HTTP ${result.code}`, result.text);
+  }
 }
 
 /* ---------- Sender ---------- */
 function sendToDiscord(payload) {
+  let result = doSendToDiscord(payload);
+
+  for (let attempt = 1; attempt <= MAX_RETRIES && result.code === 429; attempt++) {
+    const waitMs = getRetryAfterMs(result.text) || 1000 * attempt * 2;
+    console.warn(`Rate limited, retrying in ${waitMs}ms (attempt ${attempt}/${MAX_RETRIES})`);
+    Utilities.sleep(waitMs);
+    result = doSendToDiscord(payload);
+  }
+
+  return result;
+}
+
+function doSendToDiscord(payload) {
+  throttleDiscordRequest();
   try {
     const url = `${DISCORD_WEBHOOK_URL}${discordThreadId ? `&thread_id=${discordThreadId}` : ""}`;
     const res = UrlFetchApp.fetch(url, {
@@ -243,11 +266,25 @@ function sendToDiscord(payload) {
     if (code < 200 || code >= 300) {
       console.warn(`Discord HTTP ${code}:`, text);
     }
-    return text;
+    return { code, text };
   } catch (e) {
     console.error("Error sending to Discord:", e);
-    return "{}";
+    return { code: 0, text: "{}" };
   }
+}
+
+function throttleDiscordRequest() {
+  const elapsed = Date.now() - lastDiscordRequestTime;
+  if (lastDiscordRequestTime !== 0 && elapsed < MIN_REQUEST_INTERVAL_MS) {
+    Utilities.sleep(MIN_REQUEST_INTERVAL_MS - elapsed);
+  }
+  lastDiscordRequestTime = Date.now();
+}
+
+function getRetryAfterMs(responseText) {
+  const json = tryParseJson(responseText);
+  if (json && typeof json.retry_after === "number") return Math.ceil(json.retry_after * 1000) + 200;
+  return null;
 }
 
 /* ---------- Process all sections ---------- */
@@ -286,8 +323,8 @@ function sendSection(title, items, responses) {
     payload.applied_tags = DISCORD_FORUM_TAGS;
   }
 
-  const respText = sendToDiscord(payload);
-  const json = tryParseJson(respText);
+  const result = sendToDiscord(payload);
+  const json = tryParseJson(result.text);
 
   if (json && json.code) {
     console.warn("Section error:", json);
@@ -297,7 +334,7 @@ function sendSection(title, items, responses) {
     }
   }
 
-  console.log(`Sent section: ${title}`);
+  logSendResult(result, `section: ${title}`);
 }
 
 /* ---------- Utility ---------- */
