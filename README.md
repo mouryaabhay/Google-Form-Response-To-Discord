@@ -11,7 +11,7 @@
 
 <p align="center">
   <strong>🔧 <a href="https://mouryaabhay.github.io/Google-Form-Response-To-Discord/">Try the Config Builder</a></strong> — fill in a form, get a ready-to-paste script back. No manual <code>Config.gs</code> editing required.<br />
-  <sub>No internet, or the site above isn't live yet? Open <a href="ui/index.html"><code>ui/index.html</code></a> straight from this repo instead — same tool, works offline, no build step.</sub>
+  <sub>No internet, or the site above isn't live yet? Open <a href="index.html"><code>index.html</code></a> straight from this repo instead — same tool, works offline, no build step.</sub>
 </p>
 
 ---
@@ -70,7 +70,7 @@ In your Google Form, click the **⋮** menu (top right) → **Script editor**
 **Option B — Config Builder, local copy**
 
 Same tool as Option A, useful if the hosted site above isn't available (e.g. GitHub Pages not yet enabled for this repo) or you're offline.
-1. Clone or download this repo, then open [`ui/index.html`](ui/index.html) directly in your browser — no build step
+1. Clone or download this repo, then open [`index.html`](index.html) directly in your browser — no build step
 2. Follow steps 2–4 from Option A above
 
 > [!TIP]

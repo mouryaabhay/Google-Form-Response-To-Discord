@@ -5,11 +5,11 @@ Thanks for taking the time to contribute — this is a small project, so the pro
 ## Project layout
 
 - [`apps-script/`](apps-script/) — `Code.gs` / `Config.gs`, the Google Apps Script itself. Users copy these into their own Apps Script project.
-- [`ui/`](ui/) — a static, no-build Config Builder page (`index.html` / `style.css` / `app.js`). It embeds a copy of `Code.gs` (base64-encoded, inside `app.js`) so it can generate a combined file without a network fetch. **If you change `apps-script/Code.gs`, you must regenerate that embedded copy** — see below.
+- [`index.html`](index.html) / [`style.css`](style.css) / [`app.js`](app.js) — the static, no-build Config Builder page, served from the repo root so it can be published directly via GitHub Pages. It embeds a copy of `Code.gs` (base64-encoded, inside `app.js`) so it can generate a combined file without a network fetch. **If you change `apps-script/Code.gs`, you must regenerate that embedded copy** — see below.
 
 ## Branches
 
-- `main` holds the current release only.
+- `main` holds the current release only (and is what GitHub Pages serves).
 - `dev` is where active work happens. Open pull requests against `dev`, not `main`.
 
 ## Making a change to Code.gs / Config.gs
@@ -21,27 +21,27 @@ Thanks for taking the time to contribute — this is a small project, so the pro
    node -e '
      const fs = require("fs");
      const b64 = fs.readFileSync("/dev/stdin", "utf8").trim();
-     let app = fs.readFileSync("ui/app.js", "utf8");
+     let app = fs.readFileSync("app.js", "utf8");
      app = app.replace(/const CODE_GS_B64 = "[^"]*";/, "const CODE_GS_B64 = " + JSON.stringify(b64) + ";");
-     fs.writeFileSync("ui/app.js", app);
+     fs.writeFileSync("app.js", app);
    ' <<< "$B64"
    ```
 3. Verify the embedded copy matches exactly:
    ```bash
    node -e '
      const fs = require("fs");
-     const app = fs.readFileSync("ui/app.js", "utf8");
+     const app = fs.readFileSync("app.js", "utf8");
      const b64 = app.match(/\nconst CODE_GS_B64 = "(.*)";/)[1];
      const decoded = Buffer.from(b64, "base64").toString("utf8");
      console.log("match:", decoded === fs.readFileSync("apps-script/Code.gs", "utf8"));
    '
    ```
    This should print `match: true`. Do not hand-edit the `CODE_GS_B64` constant — it's long enough that manual edits reliably introduce silent corruption.
-4. Update the README's [Configuration Reference](README.md#️-configuration-reference) table if you added, removed, or renamed a config variable, and update `ui/index.html` / `ui/app.js` to match.
+4. Update the README's [Configuration Reference](README.md#️-configuration-reference) table if you added, removed, or renamed a config variable, and update `index.html` / `app.js` to match.
 
 ## Making a change to the Config Builder UI
 
-`ui/` has no build step — open `ui/index.html` directly in a browser (or serve the folder with any static file server) to test changes. There's no framework; it's plain HTML/CSS/JS styled to look like shadcn/ui.
+No build step — open `index.html` directly in a browser (or serve the repo root with any static file server) to test changes. There's no framework; it's plain HTML/CSS/JS styled to look like shadcn/ui.
 
 Things to check before opening a PR:
 - Both light and dark themes
