@@ -3,7 +3,7 @@
   Automatically send Google Form submissions to Discord as rich embeds — with forum channel support, thread naming, and auto-tagging.
 </p>
 <p align="center">
-  <img src="https://hits.sh/github.com/mouryaabhay/Google-Form-Response-To-Discord.svg?label=Views&color=blue" alt="Views">
+  <img src="https://visitor-badge.laobi.icu/badge?page_id=mouryaabhay.Google-Form-Response-To-Discord" alt="Views">
   <img src="https://img.shields.io/github/stars/mouryaabhay/Google-Form-Response-To-Discord?style=flat" alt="Stars">
   <img src="https://img.shields.io/github/forks/mouryaabhay/Google-Form-Response-To-Discord?style=flat" alt="Forks">
   <img src="https://img.shields.io/github/license/mouryaabhay/Google-Form-Response-To-Discord?style=flat" alt="License">

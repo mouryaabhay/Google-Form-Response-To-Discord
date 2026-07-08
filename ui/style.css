@@ -347,6 +347,69 @@ a { color: inherit; }
 
 .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 
+.icon-img {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  border-radius: 3px;
+  display: block;
+}
+
+/* ---------- Tooltip (icon-only controls) ---------- */
+[data-tooltip] { position: relative; }
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  background: hsl(var(--foreground));
+  color: hsl(var(--background));
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.3rem 0.55rem;
+  border-radius: 0.35rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.12s ease, transform 0.12s ease;
+  z-index: 60;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Right-align tooltip for controls near the right edge so it doesn't clip */
+#theme-toggle::after,
+#ghStarLink::after {
+  left: auto;
+  right: 0;
+  transform: translateY(-4px);
+}
+#theme-toggle:hover::after,
+#theme-toggle:focus-visible::after,
+#ghStarLink:hover::after,
+#ghStarLink:focus-visible::after {
+  transform: translateY(0);
+}
+
+/* Tooltips inside the tag/color rows sit above instead of below (avoid clipping at list edges) */
+.tag-row [data-tooltip]::after {
+  top: auto;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%) translateY(4px);
+}
+.tag-row [data-tooltip]:hover::after,
+.tag-row [data-tooltip]:focus-visible::after {
+  transform: translateX(-50%) translateY(0);
+}
+
 #ghStarLink { padding: 0.45rem 0.7rem; }
 #ghStarCount {
   font-size: 0.78rem;

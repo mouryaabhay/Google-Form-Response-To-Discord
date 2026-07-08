@@ -53,6 +53,7 @@ function createRemovableRow(list, buildInput) {
   removeBtn.className = "btn btn-outline btn-icon";
   removeBtn.type = "button";
   removeBtn.setAttribute("aria-label", "Remove");
+  removeBtn.setAttribute("data-tooltip", "Remove");
   removeBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
   removeBtn.addEventListener("click", () => {
     row.remove();
