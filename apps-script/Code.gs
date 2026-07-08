@@ -1,0 +1,356 @@
+/**************************************************
+    Google Form Response To Discord
+    Auto Forum / Normal Channel Detection Version
+    Author: Mourya Abhay Amarjeet (Dynastic Creator)
+**************************************************/
+
+let discordThreadId = "";
+let discordThreadName = "";
+let webhookSupportsForum = true;
+let forumDetectionDone = false;
+
+/* ---------- Discord Limits ---------- */
+const DISCORD_LIMITS = {
+  THREAD_NAME: 100,
+  DESCRIPTION: 4096,
+  FIELD_NAME: 256,
+  FIELD_VALUE: 1024
+};
+
+/* ---------- Request pacing ----------
+   Forms with several sections send several webhook requests back-to-back.
+   Firing them with no gap reliably trips Cloudflare's edge rate limit
+   (HTTP 429, "error code: 1015") in front of Discord, even though each
+   request individually is well under Discord's own webhook rate limit. */
+const MIN_REQUEST_INTERVAL_MS = resolveRequestIntervalMs();
+const MAX_RETRIES = 3;
+let lastDiscordRequestTime = 0;
+
+function resolveRequestIntervalMs() {
+  if (typeof requestIntervalMs === "number" && isFinite(requestIntervalMs) && requestIntervalMs >= 0) {
+    return Math.floor(requestIntervalMs);
+  }
+  return 2000;
+}
+
+/* ============================================================
+   MAIN SUBMISSION HANDLER
+   Declared first so it's the default pick in the Apps Script editor's
+   "Select function" dropdown (used for both manual test runs and
+   trigger setup) — otherwise a helper function ends up selected by
+   default and testing silently does nothing.
+   ============================================================ */
+function onSubmit(event) {
+  if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.startsWith("YOUR_WEBHOOK_URL")) {
+    throw new Error("DISCORD_WEBHOOK_URL is not configured. Update Config.gs before running.");
+  }
+
+  const form = FormApp.getActiveForm();
+  const latestResponse = form.getResponses().pop();
+  const allItems = form.getItems();  // FULL question list
+
+  const responses = mapResponses(latestResponse);
+
+  const discordMessageContent = createDiscordMessageContent(responses, allItems);
+  discordThreadName = createThreadName(responses, allItems);
+
+  const firstPageQuestions = getFirstPageQuestions(form);
+  const mainEmbedFields = createEmbedFields(firstPageQuestions, responses);
+
+  sendEmbedToDiscordWithFallback(mainEmbedFields, discordMessageContent);
+
+  processSections(allItems, responses);
+}
+
+/* ---------- Map all responses ---------- */
+function mapResponses(latestResponse) {
+  return new Map(
+    latestResponse.getItemResponses().map(item => [
+      item.getItem().getTitle(),
+      item.getResponse()
+    ])
+  );
+}
+
+/* ---------- Helper: Get question by index in FULL LIST ---------- */
+function getQuestionByIndex(allItems, index) {
+  const item = allItems[index - 1];
+  return item ? item.getTitle() : null;
+}
+
+/* ---------- Message content w/ User ID ---------- */
+function createDiscordMessageContent(responses, allItems) {
+  const userIdTitle = getQuestionByIndex(allItems, userIdQuestionNumber);
+  const userID = responses.get(userIdTitle) || "";
+
+  console.log(`Discord User ID: ${userID}`);
+  return submissionMessageContent.replace("{discordUserID}", userID);
+}
+
+/* ---------- Thread Name Builder (GLOBAL lookup) ---------- */
+function createThreadName(responses, allItems) {
+  const usernameTitle = getQuestionByIndex(allItems, usernameQuestionNumber);
+  const username = responses.get(usernameTitle) || "";
+
+  console.log(`Discord Username: ${username}`);
+
+  if (!threadNamePosition) return "";
+
+  let name;
+  switch (threadNamePosition) {
+    case "start": name = `${username}${threadNameStaticText}`; break;
+    case "end": name = `${threadNameStaticText}${username}`; break;
+    default: name = threadNameStaticText;
+  }
+  return truncate(name, DISCORD_LIMITS.THREAD_NAME);
+}
+
+/* ---------- Get first page questions ---------- */
+function getFirstPageQuestions(form) {
+  const items = form.getItems();
+  const idx = items.findIndex(i => i.getType() === FormApp.ItemType.PAGE_BREAK);
+  return items.slice(0, idx !== -1 ? idx : undefined);
+}
+
+/* ---------- Embed Field Builder ---------- */
+function createEmbedFields(items, responses) {
+  return items.reduce((fields, question) => {
+    let response = formatResponse(question, responses);
+
+    if (!response || (skipEmptyResponses && response === noAnswerMessage)) return fields;
+
+    fields.push({
+      name: truncate(question.getTitle(), DISCORD_LIMITS.FIELD_NAME),
+      value: truncate(`${embedFieldValuePrefix}${response}`, DISCORD_LIMITS.FIELD_VALUE),
+      inline: false
+    });
+
+    return fields;
+  }, []);
+}
+
+/* ---------- Format responses ---------- */
+function formatResponse(question, responses) {
+  let response = responses.get(question.getTitle()) || noAnswerMessage;
+
+  if (question.getType() === FormApp.ItemType.FILE_UPLOAD) return formatFileResponse(response);
+  if (question.getType() === FormApp.ItemType.TIME) return formatTime(response);
+  if (response instanceof Date) return formatDateTime(response);
+
+  response = String(response)
+    .replace(/,(\S)/g, ", $1")
+    .replace(/\n{2,}/g, "\n");
+
+  return response;
+}
+
+function formatFileResponse(response) {
+  if (!Array.isArray(response) || response.length === 0) return noAnswerMessage;
+  return response.map(f =>
+    /^https?:\/\//.test(f) ? f : `<https://drive.google.com/uc?id=${f}>`
+  ).join("\n");
+}
+
+function formatTime(t) {
+  const [h, m] = t.split(":").map(Number);
+  const ampm = h >= 12 ? "PM" : "AM";
+  const h12 = h % 12 || 12;
+  return `${h12}:${m.toString().padStart(2, "0")} ${ampm}`;
+}
+
+function formatDateTime(date) {
+  const unix = Math.floor(date.getTime() / 1000);
+  return `<t:${unix}:f>`;
+}
+
+/* ============================================================
+   SEND FIRST EMBED (FORUM DETECTION)
+   ============================================================ */
+function sendEmbedToDiscordWithFallback(embedFields, discordMessageContent) {
+  const formTitle = FormApp.getActiveForm().getTitle();
+
+  const forumPayload = {
+    content: discordMessageContent,
+    embeds: [{
+      color: getNextEmbedColor(),
+      description: truncate(embedDescriptionTemplate.replace("{formTitle}", formTitle), DISCORD_LIMITS.DESCRIPTION),
+      fields: embedFields
+    }],
+    components: []
+  };
+
+  if (Array.isArray(DISCORD_FORUM_TAGS) && DISCORD_FORUM_TAGS.length && webhookSupportsForum) {
+    forumPayload.applied_tags = DISCORD_FORUM_TAGS;
+  }
+  if (webhookSupportsForum && !discordThreadId && discordThreadName && discordThreadName.trim() !== "") {
+    forumPayload.thread_name = discordThreadName;
+  }
+
+  if (!webhookSupportsForum && forumDetectionDone) {
+    const normalPayload = {
+      content: discordMessageContent,
+      embeds: forumPayload.embeds,
+      components: []
+    };
+    logSendResult(sendToDiscord(normalPayload), "normal (known)");
+    return;
+  }
+
+  const firstResult = sendToDiscord(forumPayload);
+  const firstJson = tryParseJson(firstResult.text);
+
+  if (indicatesNotForum(firstJson)) {
+    webhookSupportsForum = false;
+    forumDetectionDone = true;
+    console.warn("⚠️ Not a forum. Switching to NORMAL MODE.");
+
+    const normalPayload = {
+      content: discordMessageContent,
+      embeds: forumPayload.embeds,
+      components: []
+    };
+    logSendResult(sendToDiscord(normalPayload), "normal (resend)");
+    return;
+  }
+
+  if (firstJson && firstJson.channel_id) {
+    discordThreadId = firstJson.channel_id;
+  } else if (firstJson && firstJson.id && !discordThreadId) {
+    discordThreadId = firstJson.id;
+  }
+
+  forumDetectionDone = true;
+  logSendResult(firstResult, "forum (first send)");
+}
+
+/* ---------- Helpers ---------- */
+function tryParseJson(text) {
+  try { return JSON.parse(text); } catch (e) { return null; }
+}
+
+function indicatesNotForum(json) {
+  if (!json) return false;
+  const errCode = json.code;
+  if (errCode === 220003 || errCode === 220001) return true;
+  if (json.message && /forum|thread_name|applied_tags/i.test(json.message)) return true;
+  return false;
+}
+
+function logSendResult(result, tag) {
+  if (result.code >= 200 && result.code < 300) {
+    console.log(`Sent (${tag})`);
+  } else {
+    console.warn(`Failed to send (${tag}): HTTP ${result.code}`, result.text);
+  }
+}
+
+/* ---------- Sender ---------- */
+function sendToDiscord(payload) {
+  let result = doSendToDiscord(payload);
+
+  for (let attempt = 1; attempt <= MAX_RETRIES && result.code === 429; attempt++) {
+    const waitMs = getRetryAfterMs(result.text) || 1000 * attempt * 2;
+    console.warn(`Rate limited, retrying in ${waitMs}ms (attempt ${attempt}/${MAX_RETRIES})`);
+    Utilities.sleep(waitMs);
+    result = doSendToDiscord(payload);
+  }
+
+  return result;
+}
+
+function doSendToDiscord(payload) {
+  throttleDiscordRequest();
+  try {
+    const url = `${DISCORD_WEBHOOK_URL}${discordThreadId ? `&thread_id=${discordThreadId}` : ""}`;
+    const res = UrlFetchApp.fetch(url, {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true
+    });
+    const code = res.getResponseCode();
+    const text = res.getContentText();
+    if (code < 200 || code >= 300) {
+      console.warn(`Discord HTTP ${code}:`, text);
+    }
+    return { code, text };
+  } catch (e) {
+    console.error("Error sending to Discord:", e);
+    return { code: 0, text: "{}" };
+  } finally {
+    // Track request completion time so the next send starts >= 1s later.
+    lastDiscordRequestTime = Date.now();
+  }
+}
+
+function throttleDiscordRequest() {
+  const elapsed = Date.now() - lastDiscordRequestTime;
+  if (lastDiscordRequestTime !== 0 && elapsed < MIN_REQUEST_INTERVAL_MS) {
+    Utilities.sleep(MIN_REQUEST_INTERVAL_MS - elapsed);
+  }
+}
+
+function getRetryAfterMs(responseText) {
+  const json = tryParseJson(responseText);
+  if (json && typeof json.retry_after === "number") return Math.ceil(json.retry_after * 1000) + 200;
+  return null;
+}
+
+/* ---------- Process all sections ---------- */
+function processSections(allItems, responses) {
+  let sectionTitle = "";
+  let sectionItems = [];
+
+  allItems.forEach(item => {
+    if (item.getType() === FormApp.ItemType.PAGE_BREAK) {
+      if (sectionTitle) sendSection(sectionTitle, sectionItems, responses);
+      sectionTitle = item.getTitle();
+      sectionItems = [];
+    } else {
+      sectionItems.push(item);
+    }
+  });
+
+  if (sectionTitle) sendSection(sectionTitle, sectionItems, responses);
+}
+
+/* ---------- Send each section ---------- */
+function sendSection(title, items, responses) {
+  const fields = createEmbedFields(items, responses);
+  if (!fields.length) return console.log(`Skipped empty section: ${title}`);
+
+  const payload = {
+    embeds: [{
+      color: getNextEmbedColor(),
+      title: title,
+      fields: fields
+    }],
+    components: []
+  };
+
+  if (webhookSupportsForum && Array.isArray(DISCORD_FORUM_TAGS) && DISCORD_FORUM_TAGS.length) {
+    payload.applied_tags = DISCORD_FORUM_TAGS;
+  }
+
+  const result = sendToDiscord(payload);
+  const json = tryParseJson(result.text);
+
+  if (json && json.code) {
+    console.warn("Section error:", json);
+    if (!forumDetectionDone && indicatesNotForum(json)) {
+      webhookSupportsForum = false;
+      forumDetectionDone = true;
+    }
+  }
+
+  logSendResult(result, `section: ${title}`);
+}
+
+/* ---------- Utility ---------- */
+function truncate(text, max, suffix = "...") {
+  return text.length > max ? text.slice(0, max - suffix.length) + suffix : text;
+}
+
+function getNextEmbedColor() {
+  return EMBED_COLORS[Math.floor(Math.random() * EMBED_COLORS.length)];
+}
