@@ -123,7 +123,7 @@ Listed in the order each one takes effect in the resulting Discord post — from
 | `threadNameStaticText` | `string` | `" Submitted a Form"` | Static text combined with the username to build the forum thread's title. |
 | `threadNamePosition` | `string \| null` | `"start"` | Where the username sits relative to the static text: `"start"`, `"end"`, or `null` to use only the static text. |
 | `DISCORD_FORUM_TAGS` | `string[]` | `[]` | Forum tag IDs to apply to new posts. Leave as `[]` if not using forum tags. |
-| `submissionMessageContent` | `string` | `"<@{discordUserID}> submitted a form!"` | Text sent above the embed. Use `{discordUserID}` to mention the submitter. |
+| `submissionMessageContent` | `string` | `"<@{discordUserID}> submitted a form!"` | Text sent above the embed. Wrap the placeholder as `<@{discordUserID}>` to actually mention (ping) the submitter — the placeholder alone just prints the raw ID as text. |
 | `embedDescriptionTemplate` | `string` | `"### {formTitle}"` | Text shown at the top of the main embed. Use `{formTitle}` for the form's title. |
 | `EMBED_COLORS` | `number[]` | 20 preset hex colors | One color picked at random per embed/section. Use a single-value array to always use that one color. |
 | `embedFieldValuePrefix` | `string` | `">>> "` | Markdown prepended to each answer inside the embed. Leave as `""` for no styling. |

@@ -309,6 +309,7 @@ a { color: inherit; }
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
+  text-decoration: none;
   transition: background-color 0.15s, border-color 0.15s, color 0.15s;
   white-space: nowrap;
 }

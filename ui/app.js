@@ -75,8 +75,17 @@ function addTagRow(value) {
     const input = document.createElement("input");
     input.className = "input";
     input.type = "text";
+    input.inputMode = "numeric";
+    input.pattern = "[0-9]*";
     input.placeholder = "e.g. 1234567890123456789";
     input.value = value || "";
+    input.addEventListener("beforeinput", (e) => {
+      if (e.data && /\D/.test(e.data)) e.preventDefault();
+    });
+    input.addEventListener("input", () => {
+      const digitsOnly = input.value.replace(/\D/g, "");
+      if (digitsOnly !== input.value) input.value = digitsOnly;
+    });
     return input;
   });
 }
