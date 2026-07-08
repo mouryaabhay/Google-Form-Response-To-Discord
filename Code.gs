@@ -46,13 +46,13 @@ function onSubmit(event) {
 
   const responses = mapResponses(latestResponse);
 
-  let discordMessageContent = createDiscordMessageContent(responses, allItems);
+  const discordMessageContent = createDiscordMessageContent(responses, allItems);
   discordThreadName = createThreadName(responses, allItems);
 
   const firstPageQuestions = getFirstPageQuestions(form);
   const mainEmbedFields = createEmbedFields(firstPageQuestions, responses);
 
-  sendEmbedToDiscordWithFallback(mainEmbedFields);
+  sendEmbedToDiscordWithFallback(mainEmbedFields, discordMessageContent);
 
   processSections(allItems, responses);
 }
@@ -161,7 +161,7 @@ function formatDateTime(date) {
 /* ============================================================
    SEND FIRST EMBED (FORUM DETECTION)
    ============================================================ */
-function sendEmbedToDiscordWithFallback(embedFields) {
+function sendEmbedToDiscordWithFallback(embedFields, discordMessageContent) {
   const formTitle = FormApp.getActiveForm().getTitle();
 
   const forumPayload = {
