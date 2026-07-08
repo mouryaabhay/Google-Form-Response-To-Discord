@@ -64,16 +64,16 @@ function getQuestionByIndex(allItems, index) {
 
 /* ---------- Message content w/ User ID ---------- */
 function createDiscordMessageContent(responses, allItems) {
-  const userIdTitle = getQuestionByIndex(allItems, userIDQuestion);
+  const userIdTitle = getQuestionByIndex(allItems, userIdQuestionNumber);
   const userID = responses.get(userIdTitle) || "";
 
   console.log(`Discord User ID: ${userID}`);
-  return messageContent.replace("{discordUserID}", userID);
+  return submissionMessageContent.replace("{discordUserID}", userID);
 }
 
 /* ---------- Thread Name Builder (GLOBAL lookup) ---------- */
 function createThreadName(responses, allItems) {
-  const usernameTitle = getQuestionByIndex(allItems, usernameQuestion);
+  const usernameTitle = getQuestionByIndex(allItems, usernameQuestionNumber);
   const username = responses.get(usernameTitle) || "";
 
   console.log(`Discord Username: ${username}`);
@@ -82,9 +82,9 @@ function createThreadName(responses, allItems) {
 
   let name;
   switch (threadNamePosition) {
-    case "start": name = `${username}${discordThreadNamePart}`; break;
-    case "end": name = `${discordThreadNamePart}${username}`; break;
-    default: name = discordThreadNamePart;
+    case "start": name = `${username}${threadNameStaticText}`; break;
+    case "end": name = `${threadNameStaticText}${username}`; break;
+    default: name = threadNameStaticText;
   }
   return truncate(name, DISCORD_LIMITS.THREAD_NAME);
 }

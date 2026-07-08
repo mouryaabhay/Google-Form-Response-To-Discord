@@ -113,20 +113,22 @@ Make sure the URL ends with `?wait=true` — do not remove it.
 
 ## ⚙️ Configuration Reference
 
+Listed in the order each one takes effect in the resulting Discord post — from the webhook you send to, down through the thread title, message text, and finally the embed itself (heading, colors, then fields).
+
 | Variable | Type | Default | Description |
 |---|---|---|---|
 | `DISCORD_WEBHOOK_URL` | `string` | — | Your Discord webhook URL. Must end with `?wait=true`. |
+| `userIdQuestionNumber` | `number` | `3` | Position of the Discord user ID question in your form (counting from 1). |
+| `usernameQuestionNumber` | `number` | `2` | Position of the Discord username question in your form (counting from 1). |
+| `threadNameStaticText` | `string` | `" Submitted a Form"` | Static text combined with the username to build the forum thread's title. |
+| `threadNamePosition` | `string \| null` | `"start"` | Where the username sits relative to the static text: `"start"`, `"end"`, or `null` to use only the static text. |
 | `DISCORD_FORUM_TAGS` | `string[]` | `[]` | Forum tag IDs to apply to new posts. Leave as `[]` if not using forum tags. |
-| `userIDQuestion` | `number` | `3` | Position of the Discord user ID question in your form (counting from 1). |
-| `usernameQuestion` | `number` | `2` | Position of the Discord username question in your form (counting from 1). |
-| `discordThreadNamePart` | `string` | `" Submitted a Form"` | Static text included in the forum thread name. |
-| `threadNamePosition` | `string \| null` | `"start"` | Where the static text appears: `"start"`, `"end"`, or `null` to use only the username. |
-| `messageContent` | `string` | `"<@{discordUserID}> submitted a form!"` | Text sent outside the embed. Use `{discordUserID}` to mention the submitter. |
+| `submissionMessageContent` | `string` | `"<@{discordUserID}> submitted a form!"` | Text sent above the embed. Use `{discordUserID}` to mention the submitter. |
+| `embedDescriptionTemplate` | `string` | `"### {formTitle}"` | Text shown at the top of the main embed. Use `{formTitle}` for the form's title. |
+| `EMBED_COLORS` | `number[]` | 20 preset hex colors | One color picked at random per embed/section. Use a single-value array to always use that one color. |
+| `embedFieldValuePrefix` | `string` | `">>> "` | Markdown prepended to each answer inside the embed. Leave as `""` for no styling. |
 | `noAnswerMessage` | `string` | `"No answer provided!"` | Text shown for unanswered optional questions. |
 | `skipEmptyResponses` | `boolean` | `false` | Set to `true` to hide unanswered questions from the embed entirely. |
-| `embedDescriptionTemplate` | `string` | `"### {formTitle}"` | Text shown at the top of the main embed. Use `{formTitle}` for the form's title. |
-| `embedFieldValuePrefix` | `string` | `">>> "` | Markdown prepended to each answer inside the embed. Leave as `""` for no styling. |
-| `EMBED_COLORS` | `number[]` | 20 preset hex colors | One color picked at random per embed/section. Use a single-value array to always use that one color. |
 
 ### How to count question positions
 
@@ -141,7 +143,7 @@ Position 3: Discord User ID
 Position 4: Question 4
 Position 5: Question 5
 --- Section 2 title (counts as position 6) ---
-Position 7: Discord Username    ← usernameQuestion = 7
+Position 7: Discord Username    ← usernameQuestionNumber = 7
 Position 8: ...
 ```
 
@@ -155,7 +157,7 @@ Enable **Developer Mode** in Discord (**User Settings → Advanced → Developer
 
 ### Thread name combinations
 
-With `discordThreadNamePart = " | Application"` and username `JohnDoe`:
+With `threadNameStaticText = " | Application"` and username `JohnDoe`:
 
 | `threadNamePosition` | Resulting thread name |
 |---|---|
@@ -214,7 +216,7 @@ Use Discord forum tags to track where each submission stands:
 
 ### Notifying staff on new submissions
 
-In `messageContent`, use a role mention so your team gets pinged automatically:
+In `submissionMessageContent`, use a role mention so your team gets pinged automatically:
 
 ```
 <@&ROLE_ID> — new submission received from <@{discordUserID}>!
@@ -260,7 +262,7 @@ This is expected for personal scripts and is safe to proceed with.
 
 ### Wrong username or user ID is being picked up
 
-The `usernameQuestion` or `userIDQuestion` values in `Config.gs` don't match the actual positions in your form. Recount carefully — each question **and each section title (page break)** takes up one position.
+The `usernameQuestionNumber` or `userIdQuestionNumber` values in `Config.gs` don't match the actual positions in your form. Recount carefully — each question **and each section title (page break)** takes up one position.
 
 Use the counting example in the [Configuration Reference](#how-to-count-question-positions) section above.
 
