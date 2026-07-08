@@ -124,6 +124,9 @@ Make sure the URL ends with `?wait=true` — do not remove it.
 | `messageContent` | `string` | `"<@{discordUserID}> submitted a form!"` | Text sent outside the embed. Use `{discordUserID}` to mention the submitter. |
 | `noAnswerMessage` | `string` | `"No answer provided!"` | Text shown for unanswered optional questions. |
 | `skipEmptyResponses` | `boolean` | `false` | Set to `true` to hide unanswered questions from the embed entirely. |
+| `embedDescriptionTemplate` | `string` | `"### {formTitle}"` | Text shown at the top of the main embed. Use `{formTitle}` for the form's title. |
+| `embedFieldValuePrefix` | `string` | `">>> "` | Markdown prepended to each answer inside the embed. Leave as `""` for no styling. |
+| `EMBED_COLORS` | `number[]` | 20 preset hex colors | Colors cycled through for each embed/section sent, in order. |
 
 ### How to count question positions
 
@@ -176,6 +179,19 @@ const DISCORD_FORUM_TAGS = [
 ```
 
 Leave as `[]` if you're not using forum tags or using a normal text channel.
+
+### Customizing the embed's appearance
+
+```js
+// Plain heading instead of the default markdown heading
+const embedDescriptionTemplate = "New response to: {formTitle}";
+
+// No blockquote styling on answers
+const embedFieldValuePrefix = "";
+
+// Single brand color instead of the rotating palette
+const EMBED_COLORS = [0x5865f2];
+```
 
 ---
 

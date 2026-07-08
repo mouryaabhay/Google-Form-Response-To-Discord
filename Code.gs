@@ -17,15 +17,6 @@ const DISCORD_LIMITS = {
   FIELD_VALUE: 1024
 };
 
-/* ---------- Colors ---------- */
-const EMBED_COLORS = [
-  0x1abc9c, 0x2ecc71, 0x3498db, 0x9b59b6,
-  0xe91e63, 0xe67e22, 0xf1c40f, 0xe74c3c,
-  0x95a5a6, 0x34495e, 0x16a085, 0x27ae60,
-  0x2980b9, 0x8e44ad, 0xc0392b, 0xd35400,
-  0xf39c12, 0x7f8c8d, 0x2c3e50, 0xbdc3c7
-];
-
 let embedColorIndex = 0;
 
 /* ---------- Config Validation ---------- */
@@ -116,7 +107,7 @@ function createEmbedFields(items, responses) {
 
     fields.push({
       name: truncate(question.getTitle(), DISCORD_LIMITS.FIELD_NAME),
-      value: truncate(`>>> ${response}`, DISCORD_LIMITS.FIELD_VALUE),
+      value: truncate(`${embedFieldValuePrefix}${response}`, DISCORD_LIMITS.FIELD_VALUE),
       inline: false
     });
 
@@ -168,7 +159,7 @@ function sendEmbedToDiscordWithFallback(embedFields, discordMessageContent) {
     content: discordMessageContent,
     embeds: [{
       color: getNextEmbedColor(),
-      description: truncate(`### ${formTitle}`, DISCORD_LIMITS.DESCRIPTION),
+      description: truncate(embedDescriptionTemplate.replace("{formTitle}", formTitle), DISCORD_LIMITS.DESCRIPTION),
       fields: embedFields
     }],
     components: []
