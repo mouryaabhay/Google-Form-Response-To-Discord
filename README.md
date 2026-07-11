@@ -11,6 +11,7 @@
 
 <p align="center">
   <strong>🔧 <a href="https://mouryaabhay.github.io/Google-Form-Response-To-Discord/">Try the Config Builder</a></strong> — fill in a form, get a ready-to-paste script back. No manual <code>Config.gs</code> editing required.<br />
+  <strong>🎥 <a href="https://youtu.be/_qh-aKK_Fvk">Watch the Tutorial</a></strong> — see the setup flow end to end.<br />
   <sub>No internet, or the site above isn't live yet? Open <a href="index.html"><code>index.html</code></a> straight from this repo instead — same tool, works offline, no build step.</sub>
 </p>
 
@@ -102,7 +103,7 @@ Same tool as Option A, useful if the hosted site above isn't available (e.g. Git
 
 **If you copy-pasted manually (Option C):** open `Config.gs` in the Script Editor and fill in your values. See the [Configuration Reference](#️-configuration-reference) table below for full details.
 
-**At minimum**, replace `YOUR_WEBHOOK_URL` with your Discord webhook URL.  
+**At minimum**, replace `YOUR_WEBHOOK_URL` with your Discord webhook URL.
 Make sure the URL ends with `?wait=true` — do not remove it.
 
 ---
